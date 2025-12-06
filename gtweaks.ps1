@@ -287,10 +287,32 @@ $Actions["chkEndTask"] = {
     Set-Reg "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "TaskbarEndTask" 1
 }
 $Actions["chkDiskCleanup"] = {
-    Log-Write "Executando Disk Cleanup (Cleanmgr)..."
-    $RegPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Temporary Files"
-    Set-ItemProperty -Path $RegPath -Name "StateFlags0001" -Value 2 -Type DWord -Force | Out-Null
-    Start-Process cleanmgr.exe -ArgumentList "/sagerun:1" -NoNewWindow -Wait
+    Log-Write "Configurando Auto-Limpeza do Windows..."
+
+    # 1. O segredo: Iterar por TODAS as opções de limpeza do Windows (Lixeira, Updates, Temp)
+    # e marcar a flag "StateFlags0001" como 2 (Ativado).
+    $RegBase = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches"
+    
+    try {
+        $Keys = Get-ChildItem -Path $RegBase -ErrorAction SilentlyContinue
+        foreach ($Key in $Keys) {
+            # Força a criação da flag 1 em cada categoria
+            New-ItemProperty -Path $Key.PSPath -Name "StateFlags0001" -Value 2 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
+        }
+        Log-Write "Configuração de registro aplicada."
+    } catch {
+        Log-Write "Erro ao configurar registro: $_"
+    }
+
+    Log-Write "Iniciando Cleanmgr.exe..."
+    
+    # 2. Executa o cleanmgr. 
+    # Removi o "-Wait" propositalmente. O Cleanmgr pode demorar muito (especialmente limpando Windows Update).
+    # Se deixarmos o Wait, o seu app GTweaks vai congelar e parecer que travou até ele terminar.
+    Start-Process cleanmgr.exe -ArgumentList "/sagerun:1" -WindowStyle Hidden
+    
+    Log-Write "Cleanmgr rodando em segundo plano (pode demorar)."
+}
 }
 $Actions["chkPSTelemetry"] = {
     Log-Write "Desativando PS Telemetry..."
@@ -437,3 +459,4 @@ $btnRun.Add_Click({
 })
 
 $Window.ShowDialog() | Out-Null
+
