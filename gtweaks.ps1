@@ -1,34 +1,29 @@
 <#
-    GTweaks Optimizer - Versão Final (IRM Stable)
-    Status:
-    - Admin Check: Manual (Avisa e para se não for admin).
-    - Deep Clean: CMD visível e corrigido.
-    - Disk Cleanup: Itera sobre todas as chaves do registro.
+    GTweaks Optimizer - Versão Final (Sintaxe Verificada)
+    Correção: Estrutura de chaves {} revisada para evitar erro na linha 316.
 #>
 
 # ==============================================================================
-# 1. VERIFICAÇÃO DE ADMINISTRADOR (COMPATÍVEL COM IRM)
+# 1. VERIFICACAO DE ADMINISTRADOR
 # ==============================================================================
 $Principal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
 if (!($Principal.IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))) {
     Write-Host "`n[ERRO CRITICO] O GTweaks precisa de privilegios de Administrador." -ForegroundColor Red
     Write-Host "Por favor, feche esta janela." -ForegroundColor Yellow
     Write-Host "Abra o PowerShell como ADMINISTRADOR e rode o comando novamente.`n" -ForegroundColor Yellow
-    
-    # Pausa para o usuário ler antes de fechar
     Read-Host "Pressione ENTER para sair..."
     exit
 }
 
 # ==============================================================================
-# 2. CONFIGURAÇÃO DE AMBIENTE
+# 2. CONFIGURACAO DE AMBIENTE
 # ==============================================================================
 Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 # ==============================================================================
-# 3. INTERFACE GRÁFICA (XAML)
+# 3. INTERFACE GRAFICA (XAML)
 # ==============================================================================
 [xml]$XAML = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -138,7 +133,7 @@ Add-Type -AssemblyName System.Drawing
 "@
 
 # ==============================================================================
-# 4. FUNÇÕES DE SUPORTE
+# 4. FUNCOES DE SUPORTE
 # ==============================================================================
 $Reader = (New-Object System.Xml.XmlNodeReader $XAML)
 try {
@@ -152,16 +147,12 @@ $txtLog = $Window.FindName("txtLog")
 $btnRun = $Window.FindName("btnRun")
 $btnSelectAll = $Window.FindName("btnSelectAll")
 
-# Log Header na UI (Apenas Visual)
 $txtLog.AppendText("GTweaks Engine Loaded.`r`nReady.`r`n")
 
 function Log-Write {
     param([string]$Msg)
     $TimeStamp = (Get-Date).ToString('HH:mm:ss')
-    $FormattedLine = "[$TimeStamp] $Msg"
-
-    # UI ONLY
-    $txtLog.AppendText("$FormattedLine`r`n")
+    $txtLog.AppendText("[$TimeStamp] $Msg`r`n")
     $txtLog.ScrollToEnd()
     [System.Windows.Forms.Application]::DoEvents()
 }
@@ -174,70 +165,51 @@ function Set-Reg {
 }
 
 # ==============================================================================
-# 5. LÓGICA DOS TWEAKS
+# 5. LOGICA DOS TWEAKS
 # ==============================================================================
 $Actions = @{}
 
-# --- NEW: DEEP CLEANER VISUAL ---
+# --- DEEP CLEANER ---
 $Actions["chkDeepClean"] = {
-    Log-Write "Iniciando Deep Clean (Janela Externa)..."
-    
+    Log-Write "Iniciando Deep Clean..."
     $BatchContent = @"
 @echo off
 cd /d "%TEMP%"
 mode con: cols=60 lines=25
 color 0A
-title GTweaks Deep Cleaner - EXECUTANDO
+title GTweaks Deep Cleaner
 cls
-echo ===================================================
-echo          GTWEAKS - DEEP CLEANING MATRIX
-echo ===================================================
-echo.
-echo [PROCESSANDO] Limpando Arquivos Temp...
+echo GTWEAKS - DEEP CLEANING MATRIX
 echo.
 del /s /f /q "%temp%\*.*" >nul 2>&1
 del /s /f /q "C:\Windows\Temp\*.*" >nul 2>&1
-echo.
-echo [OK] Limpeza Temp finalizada.
-echo.
-echo [PROCESSANDO] Limpando Prefetch...
 del /s /f /q "C:\Windows\Prefetch\*.*" >nul 2>&1
-echo [OK] Prefetch limpo.
 echo.
-echo [PROCESSANDO] Limpando Logs de Eventos...
-echo (Isso pode levar alguns segundos)...
-echo.
+echo Limpando Event Logs...
 for /F "tokens=*" %%A in ('wevtutil.exe el') do (
     wevtutil.exe cl "%%A" >nul 2>&1
 )
 echo.
-echo ===================================================
-echo              LIMPEZA CONCLUIDA!
-echo ===================================================
-echo.
-echo Pressione qualquer tecla para fechar...
+echo LIMPEZA CONCLUIDA!
 pause >nul
 "@
-    
     $BatchPath = "$env:TEMP\GTweaks_Cleaner.bat"
-    
     try {
         $BatchContent | Out-File -FilePath $BatchPath -Encoding ASCII -Force
         Start-Process "cmd.exe" -ArgumentList "/c `"$BatchPath`""
-        Log-Write "Janela de limpeza invocada."
+        Log-Write "Janela de limpeza aberta."
     } catch {
-        Log-Write "ERRO FATAL: $_"
-        [System.Windows.MessageBox]::Show("Erro ao criar arquivo: $_")
+        Log-Write "Erro Batch: $_"
     }
 }
 
 # --- ESSENTIALS ---
 $Actions["chkRestorePoint"] = {
-    Log-Write "Criando Restore Point (GTweaks)..."
+    Log-Write "Criando Restore Point..."
     Checkpoint-Computer -Description "GTweaks Backup" -RestorePointType "MODIFY_SETTINGS" -ErrorAction SilentlyContinue
 }
 $Actions["chkTempFiles"] = {
-    Log-Write "Limpando Temp (Silencioso)..."
+    Log-Write "Limpando Temp..."
     Remove-Item "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
     Remove-Item "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
 }
@@ -286,8 +258,6 @@ $Actions["chkEndTask"] = {
     Log-Write "Ativando End Task..."
     Set-Reg "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "TaskbarEndTask" 1
 }
-
-# --- NEW: DISK CLEANUP CORRIGIDO ---
 $Actions["chkDiskCleanup"] = {
     Log-Write "Configurando Auto-Limpeza do Windows..."
     $RegBase = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches"
@@ -296,15 +266,11 @@ $Actions["chkDiskCleanup"] = {
         foreach ($Key in $Keys) {
             New-ItemProperty -Path $Key.PSPath -Name "StateFlags0001" -Value 2 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
         }
-        Log-Write "Configuração de registro aplicada."
-    } catch {
-        Log-Write "Erro ao configurar registro: $_"
-    }
+    } catch { Log-Write "Erro reg: $_" }
 
-    Log-Write "Iniciando Cleanmgr.exe (Background)..."
+    Log-Write "Iniciando Cleanmgr (Background)..."
     Start-Process cleanmgr.exe -ArgumentList "/sagerun:1" -WindowStyle Hidden
 }
-
 $Actions["chkPSTelemetry"] = {
     Log-Write "Desativando PS Telemetry..."
     [Environment]::SetEnvironmentVariable("POWERSHELL_TELEMETRY_OPTOUT", "1", "Machine")
@@ -396,42 +362,28 @@ $Actions["chkHibernationDefault"] = {
 $Actions["chkTrayCalendar"] = { Log-Write "Tweak de Calendario nao implementado." }
 
 # ==============================================================================
-# 6. HANDLERS E EXECUÇÃO
+# 6. HANDLERS E EXECUCAO
 # ==============================================================================
-
-# --- BOTÃO SELECT ALL ---
 $btnSelectAll.Add_Click({
-    $PanelEssentials = $Window.FindName("PanelEssentials")
-    $PanelAdvanced = $Window.FindName("PanelAdvanced")
-    
     function Check-All($Panel) {
         foreach ($child in $Panel.Children) {
-            if ($child.GetType().Name -eq "CheckBox") {
-                $child.IsChecked = $true
-            }
+            if ($child.GetType().Name -eq "CheckBox") { $child.IsChecked = $true }
         }
     }
-    
     Check-All $PanelEssentials
     Check-All $PanelAdvanced
-    Log-Write "Todas as opcoes foram selecionadas (Cuidado!)."
+    Log-Write "Selecionado tudo."
 })
 
-# --- BOTÃO RUN ---
 $btnRun.Add_Click({
     $btnRun.IsEnabled = $false
     $btnRun.Content = "Processing..."
     $btnRun.Background = "#333333"
 
-    $PanelEssentials = $Window.FindName("PanelEssentials")
-    $PanelAdvanced = $Window.FindName("PanelAdvanced")
-
     function Run-Checks($Panel) {
         foreach ($child in $Panel.Children) {
             if ($child.GetType().Name -eq "CheckBox" -and $child.IsChecked) {
-                if ($Actions.ContainsKey($child.Name)) {
-                    & $Actions[$child.Name]
-                }
+                if ($Actions.ContainsKey($child.Name)) { & $Actions[$child.Name] }
             }
         }
     }
@@ -440,13 +392,11 @@ $btnRun.Add_Click({
     Run-Checks $PanelAdvanced
 
     Log-Write "--- FINALIZADO ---"
-    Log-Write "Reinicie o PC para aplicar as mudancas do GTweaks."
-    
+    Log-Write "Reinicie o PC."
     $btnRun.IsEnabled = $true
     $btnRun.Content = "RUN GTWEAKS"
     $btnRun.Background = "#007ACC"
-    
-    [System.Windows.MessageBox]::Show("Processo GTweaks finalizado!", "GTweaks")
+    [System.Windows.MessageBox]::Show("GTweaks Finalizado!", "GTweaks")
 })
 
 $Window.ShowDialog() | Out-Null
