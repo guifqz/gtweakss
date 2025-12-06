@@ -1,8 +1,9 @@
 <#
-    GTweaks Optimizer - Versão Final (IRM Friendly)
-    Alterações: 
-    - Removida auto-elevação quebrada via PSCommandPath (incompatível com IRM).
-    - Ajustado caminho do batch temporário para $env:TEMP para evitar Access Denied.
+    GTweaks Optimizer - Versão Final (IRM Stable)
+    Status:
+    - Admin Check: Manual (Avisa e para se não for admin).
+    - Deep Clean: CMD visível e corrigido.
+    - Disk Cleanup: Itera sobre todas as chaves do registro.
 #>
 
 # ==============================================================================
@@ -14,7 +15,7 @@ if (!($Principal.IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator
     Write-Host "Por favor, feche esta janela." -ForegroundColor Yellow
     Write-Host "Abra o PowerShell como ADMINISTRADOR e rode o comando novamente.`n" -ForegroundColor Yellow
     
-    # Pausa para o usuário ler antes de fechar (caso esteja rodando direto)
+    # Pausa para o usuário ler antes de fechar
     Read-Host "Pressione ENTER para sair..."
     exit
 }
@@ -184,6 +185,7 @@ $Actions["chkDeepClean"] = {
     $BatchContent = @"
 @echo off
 cd /d "%TEMP%"
+mode con: cols=60 lines=25
 color 0A
 title GTweaks Deep Cleaner - EXECUTANDO
 cls
@@ -193,38 +195,36 @@ echo ===================================================
 echo.
 echo [PROCESSANDO] Limpando Arquivos Temp...
 echo.
-del /s /f /q "%temp%\*.*"
-del /s /f /q "C:\Windows\Temp\*.*"
+del /s /f /q "%temp%\*.*" >nul 2>&1
+del /s /f /q "C:\Windows\Temp\*.*" >nul 2>&1
 echo.
 echo [OK] Limpeza Temp finalizada.
 echo.
 echo [PROCESSANDO] Limpando Prefetch...
-del /s /f /q "C:\Windows\Prefetch\*.*"
+del /s /f /q "C:\Windows\Prefetch\*.*" >nul 2>&1
 echo [OK] Prefetch limpo.
 echo.
 echo [PROCESSANDO] Limpando Logs de Eventos...
 echo (Isso pode levar alguns segundos)...
 echo.
 for /F "tokens=*" %%A in ('wevtutil.exe el') do (
-    echo Limpando Log: %%A
-    wevtutil.exe cl "%%A"
+    wevtutil.exe cl "%%A" >nul 2>&1
 )
 echo.
 echo ===================================================
 echo              LIMPEZA CONCLUIDA!
 echo ===================================================
 echo.
-echo Pode fechar esta janela para voltar ao GTweaks.
-pause
+echo Pressione qualquer tecla para fechar...
+pause >nul
 "@
     
-    # FIX: Usar Temp path em vez de C:\ raiz para evitar Access Denied
     $BatchPath = "$env:TEMP\GTweaks_Cleaner.bat"
     
     try {
         $BatchContent | Out-File -FilePath $BatchPath -Encoding ASCII -Force
-        Start-Process "cmd.exe" -ArgumentList "/c start cmd /c `"$BatchPath`"" -WindowStyle Hidden
-        Log-Write "Janela de limpeza aberta com sucesso."
+        Start-Process "cmd.exe" -ArgumentList "/c `"$BatchPath`""
+        Log-Write "Janela de limpeza invocada."
     } catch {
         Log-Write "ERRO FATAL: $_"
         [System.Windows.MessageBox]::Show("Erro ao criar arquivo: $_")
@@ -286,17 +286,14 @@ $Actions["chkEndTask"] = {
     Log-Write "Ativando End Task..."
     Set-Reg "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "TaskbarEndTask" 1
 }
+
+# --- NEW: DISK CLEANUP CORRIGIDO ---
 $Actions["chkDiskCleanup"] = {
     Log-Write "Configurando Auto-Limpeza do Windows..."
-
-    # 1. O segredo: Iterar por TODAS as opções de limpeza do Windows (Lixeira, Updates, Temp)
-    # e marcar a flag "StateFlags0001" como 2 (Ativado).
     $RegBase = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches"
-    
     try {
         $Keys = Get-ChildItem -Path $RegBase -ErrorAction SilentlyContinue
         foreach ($Key in $Keys) {
-            # Força a criação da flag 1 em cada categoria
             New-ItemProperty -Path $Key.PSPath -Name "StateFlags0001" -Value 2 -PropertyType DWord -Force -ErrorAction SilentlyContinue | Out-Null
         }
         Log-Write "Configuração de registro aplicada."
@@ -304,16 +301,10 @@ $Actions["chkDiskCleanup"] = {
         Log-Write "Erro ao configurar registro: $_"
     }
 
-    Log-Write "Iniciando Cleanmgr.exe..."
-    
-    # 2. Executa o cleanmgr. 
-    # Removi o "-Wait" propositalmente. O Cleanmgr pode demorar muito (especialmente limpando Windows Update).
-    # Se deixarmos o Wait, o seu app GTweaks vai congelar e parecer que travou até ele terminar.
+    Log-Write "Iniciando Cleanmgr.exe (Background)..."
     Start-Process cleanmgr.exe -ArgumentList "/sagerun:1" -WindowStyle Hidden
-    
-    Log-Write "Cleanmgr rodando em segundo plano (pode demorar)."
 }
-}
+
 $Actions["chkPSTelemetry"] = {
     Log-Write "Desativando PS Telemetry..."
     [Environment]::SetEnvironmentVariable("POWERSHELL_TELEMETRY_OPTOUT", "1", "Machine")
@@ -459,4 +450,3 @@ $btnRun.Add_Click({
 })
 
 $Window.ShowDialog() | Out-Null
-
