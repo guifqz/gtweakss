@@ -25,7 +25,7 @@ Function Invoke-WPFUltimatePerformance {
 
                 $guid = $null
                 $nameFromFile = "ChrisTitus - Ultimate Power Plan"
-                $description = "Ultimate Power Plan, added via WinUtils"
+                $description = "Ultimate Power Plan, added via GTweakss"
 
                 # Extract the new GUID from the duplicateOutput
                 foreach ($line in $duplicateOutput) {
@@ -82,3 +82,5 @@ Function Invoke-WPFUltimatePerformance {
         Write-Error "Error occurred: $_"
     }
 }
+
+

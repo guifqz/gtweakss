@@ -1,8 +1,8 @@
 <#
 .NOTES
-    Author         : Chris Titus @christitustech
+    Author         : GTweaks Dev @christitustech
     Runspace Author: @DeveloperDurp
-    GitHub         : https://github.com/ChrisTitusTech
+    GitHub         : https://github.com/guifqz
     Version        : #{replaceme}
 #>
 
@@ -46,7 +46,7 @@ $sync.selectedAppsPopup
 
 
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Output "Winutil needs to be run as Administrator. Attempting to relaunch."
+    Write-Output "GTweaks needs to be run as Administrator. Attempting to relaunch."
     $argList = @()
 
     $PSBoundParameters.GetEnumerator() | ForEach-Object {
@@ -62,7 +62,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     $script = if ($PSCommandPath) {
         "& { & `'$($PSCommandPath)`' $($argList -join ' ') }"
     } else {
-        "&([ScriptBlock]::Create((irm https://github.com/ChrisTitusTech/winutil/releases/latest/download/winutil.ps1))) $($argList -join ' ')"
+        "&([ScriptBlock]::Create((irm https://github.com/guifqz/GTweaks/releases/latest/download/GTweaks.ps1))) $($argList -join ' ')"
     }
 
     $powershellCmd = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell" }
@@ -79,10 +79,12 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 
 $dateTime = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
-$logdir = "$env:localappdata\winutil\logs"
+$logdir = "$env:localappdata\GTweaks\logs"
 [System.IO.Directory]::CreateDirectory("$logdir") | Out-Null
-Start-Transcript -Path "$logdir\winutil_$dateTime.log" -Append -NoClobber | Out-Null
+Start-Transcript -Path "$logdir\GTweaks_$dateTime.log" -Append -NoClobber | Out-Null
 
 # Set PowerShell window title
-$Host.UI.RawUI.WindowTitle = "WinUtil (Admin)"
+$Host.UI.RawUI.WindowTitle = "GTweaks (Admin)"
 clear-host
+
+

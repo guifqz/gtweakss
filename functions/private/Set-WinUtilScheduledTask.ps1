@@ -1,4 +1,4 @@
-function Set-WinUtilScheduledTask {
+function Set-GTweaksScheduledTask {
     <#
 
     .SYNOPSIS
@@ -11,7 +11,7 @@ function Set-WinUtilScheduledTask {
         The State to set the Task to
 
     .EXAMPLE
-        Set-WinUtilScheduledTask -Name "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" -State "Disabled"
+        Set-GTweaksScheduledTask -Name "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" -State "Disabled"
 
     #>
     param (
@@ -40,3 +40,5 @@ function Set-WinUtilScheduledTask {
         Write-Warning $psitem.Exception.StackTrace
     }
 }
+
+

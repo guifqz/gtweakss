@@ -1,4 +1,4 @@
-function Invoke-WinUtilAssets {
+function Invoke-GTweaksAssets {
   param (
       $type,
       $Size,
@@ -197,3 +197,5 @@ C 21.36,47.14 28.67,50.71 30.01,52.63
       return $LogoViewbox
   }
 }
+
+

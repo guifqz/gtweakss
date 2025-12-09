@@ -1,4 +1,4 @@
-function Remove-WinUtilAPPX {
+function Remove-GTweaksAPPX {
     <#
 
     .SYNOPSIS
@@ -8,7 +8,7 @@ function Remove-WinUtilAPPX {
         The name of the APPX package to remove
 
     .EXAMPLE
-        Remove-WinUtilAPPX -Name "Microsoft.Microsoft3DViewer"
+        Remove-GTweaksAPPX -Name "Microsoft.Microsoft3DViewer"
 
     #>
     param (
@@ -31,3 +31,5 @@ function Remove-WinUtilAPPX {
         Write-Warning $psitem.Exception.StackTrace
     }
 }
+
+

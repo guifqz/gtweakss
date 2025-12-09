@@ -1,7 +1,7 @@
-function Set-WinUtilProgressbar{
+function Set-GTweaksProgressbar{
     <#
     .SYNOPSIS
-        This function is used to Update the Progress Bar displayed in the winutil GUI.
+        This function is used to Update the Progress Bar displayed in the GTweaks GUI.
         It will be automatically hidden if the user clicks something and no process is running
     .PARAMETER Label
         The Text to be overlaid onto the Progress Bar
@@ -22,3 +22,5 @@ function Set-WinUtilProgressbar{
     $sync.form.Dispatcher.Invoke([action]{ $sync.ProgressBar.Value = $percent})
 
 }
+
+

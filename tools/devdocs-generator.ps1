@@ -93,7 +93,7 @@ function Get-AdditionalFunctionsFromToggle {
     $invokeWpfToggleContent = Get-Content -Path "$publicFunctionsDir/Invoke-WPFToggle.ps1" -Raw
     $lines = $invokeWpfToggleContent -split "`r`n"
     foreach ($line in $lines) {
-        if ($line -match "`"$buttonName`" \{Invoke-(WinUtil[a-zA-Z]+)") {
+        if ($line -match "`"$buttonName`" \{Invoke-(GTweaks[a-zA-Z]+)") {
             return $matches[1]
         }
     }
@@ -206,7 +206,7 @@ function Generate-MarkdownFiles {
         $lastUpdatedNotice = "Last Updated: $lastModified" + "`r`n"
         $autoupdatenotice = Process-MultilineStrings @"
             \\!!! info
-            \\     The Development Documentation is auto generated for every compilation of WinUtil, meaning a part of it will always stay up-to-date. **Developers do have the ability to add custom content, which won't be updated automatically.**
+            \\     The Development Documentation is auto generated for every compilation of GTweaks, meaning a part of it will always stay up-to-date. **Developers do have the ability to add custom content, which won't be updated automatically.**
 "@
 
         $description = Process-MultilineStrings @"
@@ -435,7 +435,7 @@ function Generate-MarkdownFiles {
             }
         }
 
-        $jsonLink = "[View the JSON file](https://github.com/ChrisTitusTech/winutil/tree/main/$jsonFilePath)"
+        $jsonLink = "[View the JSON file](https://github.com/guifqz/GTweaks/tree/main/$jsonFilePath)"
         $customContentStartTag = "<!-- BEGIN CUSTOM CONTENT -->"
         $customContentEndTag = "<!-- END CUSTOM CONTENT -->"
         $secondCustomContentStartTag = "<!-- BEGIN SECOND CUSTOM CONTENT -->"
@@ -550,7 +550,7 @@ function Add-LinkAttributeToJson {
         $category = $itemDetails.category -replace '[^a-zA-Z0-9]', '-'
         $displayName = $itemName -replace "$itemnametocut", ''
         $relativePath = "$outputDir/$category/$displayName" -replace '^docs/', ''
-        $docLink = "https://christitustech.github.io/winutil/$relativePath"
+        $docLink = "https://christitustech.github.io/GTweaks/$relativePath"
         $jsonData.$itemName.link = $docLink
 
         $currentProgress += $progressIncrement
@@ -575,7 +575,7 @@ $featuresOutputDir = "../docs/dev/features"
 $privateFunctionsDir = "../functions/private"
 $publicFunctionsDir = "../functions/public"
 $functions = @{}
-$itemnametocut = "WPF(WinUtil|Toggle|Features?|Tweaks?|Panel|Fix(es)?)?"
+$itemnametocut = "WPF(GTweaks|Toggle|Features?|Tweaks?|Panel|Fix(es)?)?"
 
 Update-Progress "Creating Directories" 30
 if (-Not (Test-Path -Path $tweaksOutputDir)) {
@@ -642,3 +642,5 @@ $indexContent += $(Generate-TypeSectionContent $featureEntries) + "`r`n"
 Set-Content -Path "../docs/devdocs.md" -Value $indexContent -Encoding utf8
 
 Update-Progress "Process Completed" 100
+
+

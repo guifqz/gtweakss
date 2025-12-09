@@ -1,4 +1,4 @@
-function Set-WinUtilDNS {
+function Set-GTweaksDNS {
     <#
 
     .SYNOPSIS
@@ -8,7 +8,7 @@ function Set-WinUtilDNS {
         The DNS provider to set the DNS server to
 
     .EXAMPLE
-        Set-WinUtilDNS -DNSProvider "google"
+        Set-GTweaksDNS -DNSProvider "google"
 
     #>
     param($DNSProvider)
@@ -31,3 +31,5 @@ function Set-WinUtilDNS {
         Write-Warning $psitem.Exception.StackTrace
     }
 }
+
+

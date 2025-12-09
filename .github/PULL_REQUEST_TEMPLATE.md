@@ -1,4 +1,4 @@
-<!--Before you make this PR have you followed the docs here? - https://winutil.christitus.com/contributing/ -->
+<!--Before you make this PR have you followed the docs here? - https://GTweaks Utility.christitus.com/contributing/ -->
 
 ## Type of Change
 - [ ] New feature
@@ -31,3 +31,4 @@
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.
 - [ ] My changes generate no errors/warnings/merge conflicts.
+

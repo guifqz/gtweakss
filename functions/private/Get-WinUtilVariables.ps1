@@ -1,4 +1,4 @@
-function Get-WinUtilVariables {
+function Get-GTweaksVariables {
 
     <#
     .SYNOPSIS
@@ -27,3 +27,5 @@ function Get-WinUtilVariables {
     }
     return $keys
 }
+
+

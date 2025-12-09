@@ -1,4 +1,4 @@
-function Install-WinUtilProgramChoco {
+function Install-GTweaksProgramChoco {
     <#
     .SYNOPSIS
     Manages the installation or uninstallation of a list of Chocolatey packages.
@@ -13,7 +13,7 @@ function Install-WinUtilProgramChoco {
     This function processes a list of programs to be managed using Chocolatey. Depending on the specified action, it either installs or uninstalls each program in the list, updating the taskbar progress accordingly. After all operations are completed, temporary output files are cleaned up.
 
     .EXAMPLE
-    Install-WinUtilProgramChoco -Programs @("7zip","chrome") -Action "Uninstall"
+    Install-GTweaksProgramChoco -Programs @("7zip","chrome") -Action "Uninstall"
     #>
 
     param(
@@ -113,7 +113,7 @@ function Install-WinUtilProgramChoco {
             [int]$totalPrograms
         )
         $progressState = if ($currentIndex -eq $totalPrograms) { "Normal" } else { "Error" }
-        $sync.form.Dispatcher.Invoke([action] { Set-WinUtilTaskbaritem -state $progressState -value ($currentIndex / $totalPrograms) })
+        $sync.form.Dispatcher.Invoke([action] { Set-GTweaksTaskbaritem -state $progressState -value ($currentIndex / $totalPrograms) })
     }
 
     function Install-ChocoPackage {
@@ -143,7 +143,7 @@ function Install-WinUtilProgramChoco {
             [int]$totalPrograms
         )
 
-        $installOutputFile = "$env:TEMP\Install-WinUtilProgramChoco.install-command.output.txt"
+        $installOutputFile = "$env:TEMP\Install-GTweaksProgramChoco.install-command.output.txt"
         Initialize-OutputFile $installOutputFile
 
         Write-Host "Starting installation of $Program with Chocolatey."
@@ -199,7 +199,7 @@ function Install-WinUtilProgramChoco {
             [int]$totalPrograms
         )
 
-        $uninstallOutputFile = "$env:TEMP\Install-WinUtilProgramChoco.uninstall-command.output.txt"
+        $uninstallOutputFile = "$env:TEMP\Install-GTweaksProgramChoco.uninstall-command.output.txt"
         Initialize-OutputFile $uninstallOutputFile
 
         Write-Host "Searching for metapackages of $Program (.install or .portable)"
@@ -233,8 +233,8 @@ function Install-WinUtilProgramChoco {
 
     for ($currentIndex = 0; $currentIndex -lt $totalPrograms; $currentIndex++) {
         $Program = $Programs[$currentIndex]
-        Set-WinUtilProgressBar -label "$Action $($Program)" -percent ($currentIndex / $totalPrograms * 100)
-        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -value ($currentIndex / $totalPrograms)})
+        Set-GTweaksProgressBar -label "$Action $($Program)" -percent ($currentIndex / $totalPrograms * 100)
+        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -value ($currentIndex / $totalPrograms)})
 
         switch ($Action) {
             "Install" {
@@ -248,11 +248,13 @@ function Install-WinUtilProgramChoco {
             }
         }
     }
-    Set-WinUtilProgressBar -label "$($Action)ation done" -percent 100
+    Set-GTweaksProgressBar -label "$($Action)ation done" -percent 100
     # Cleanup Output Files
-    $outputFiles = @("$env:TEMP\Install-WinUtilProgramChoco.install-command.output.txt", "$env:TEMP\Install-WinUtilProgramChoco.uninstall-command.output.txt")
+    $outputFiles = @("$env:TEMP\Install-GTweaksProgramChoco.install-command.output.txt", "$env:TEMP\Install-GTweaksProgramChoco.uninstall-command.output.txt")
     foreach ($filePath in $outputFiles) {
         Remove-Item -Path $filePath -Force -ErrorAction SilentlyContinue
     }
 }
+
+
 

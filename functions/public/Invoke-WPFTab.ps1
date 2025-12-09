@@ -15,10 +15,10 @@ function Invoke-WPFTab {
         [string]$ClickedTab
     )
 
-    $tabNav = Get-WinUtilVariables | Where-Object {$psitem -like "WPFTabNav"}
+    $tabNav = Get-GTweaksVariables | Where-Object {$psitem -like "WPFTabNav"}
     $tabNumber = [int]($ClickedTab -replace "WPFTab","" -replace "BT","") - 1
 
-    $filter = Get-WinUtilVariables -Type ToggleButton | Where-Object {$psitem -like "WPFTab?BT"}
+    $filter = Get-GTweaksVariables -Type ToggleButton | Where-Object {$psitem -like "WPFTab?BT"}
     ($sync.GetEnumerator()).where{$psitem.Key -in $filter} | ForEach-Object {
         if ($ClickedTab -ne $PSItem.name) {
             $sync[$PSItem.Name].IsChecked = $false
@@ -56,3 +56,5 @@ function Invoke-WPFTab {
         $sync.SearchBarClearButton.Visibility = "Collapsed"
     }
 }
+
+

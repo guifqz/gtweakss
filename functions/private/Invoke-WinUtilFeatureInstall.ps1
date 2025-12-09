@@ -1,4 +1,4 @@
-function Invoke-WinUtilFeatureInstall {
+function Invoke-GTweaksFeatureInstall {
     <#
 
     .SYNOPSIS
@@ -21,7 +21,7 @@ function Invoke-WinUtilFeatureInstall {
                 } catch {
                     if ($psitem.Exception.Message -like "*requires elevation*") {
                         Write-Warning "Unable to Install $feature due to permissions. Are you running as admin?"
-                        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Error" })
+                        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Error" })
                     } else {
 
                         Write-Warning "Unable to Install $feature due to unhandled exception"
@@ -40,9 +40,9 @@ function Invoke-WinUtilFeatureInstall {
                 } catch {
                     if ($psitem.Exception.Message -like "*requires elevation*") {
                         Write-Warning "Unable to Install $feature due to permissions. Are you running as admin?"
-                        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Error" })
+                        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Error" })
                     } else {
-                        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Error" })
+                        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Error" })
                         Write-Warning "Unable to Install $feature due to unhandled exception"
                         Write-Warning $psitem.Exception.StackTrace
                     }
@@ -50,6 +50,8 @@ function Invoke-WinUtilFeatureInstall {
             }
         }
         $X++
-        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -value ($x/$CheckBox.Count) })
+        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -value ($x/$CheckBox.Count) })
     }
 }
+
+

@@ -1,4 +1,4 @@
-function Test-WinUtilPackageManager {
+function Test-GTweaksPackageManager {
     <#
 
     .SYNOPSIS
@@ -103,3 +103,5 @@ function Test-WinUtilPackageManager {
 
     return $status
 }
+
+

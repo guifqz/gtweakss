@@ -1,7 +1,7 @@
-function Invoke-WinUtilUninstallPSProfile {
+function Invoke-GTweaksUninstallPSProfile {
     <#
     .SYNOPSIS
-        # Uninstalls the CTT PowerShell profile then restores the original profile.
+        # Uninstalls the GTweaks PowerShell profile then restores the original profile.
     #>
 
     Invoke-WPFRunspace -ArgumentList $PROFILE -DebugPreference $DebugPreference -ScriptBlock {
@@ -66,17 +66,17 @@ function Invoke-WinUtilUninstallPSProfile {
             }
         }
 
-        # Check if Chris Titus Tech's PowerShell profile is currently available in the PowerShell profile folder.
+        # Check if GTweaks's PowerShell profile is currently available in the PowerShell profile folder.
         if (Test-Path $PSProfile -PathType Leaf) {
-            # Set the GitHub repo path used for looking up the name of Chris Titus Tech's powershell-profile repo.
+            # Set the GitHub repo path used for looking up the name of GTweaks's powershell-profile repo.
             $GitHubRepoPath = "ChrisTitusTech/powershell-profile"
 
-            # Get the unique identifier used to test for the presence of Chris Titus Tech's PowerShell profile.
+            # Get the unique identifier used to test for the presence of GTweaks's PowerShell profile.
             $PSProfileIdentifier = (Invoke-RestMethod "https://api.github.com/repos/$GitHubRepoPath").full_name
 
-            # Check if Chris Titus Tech's PowerShell profile is currently installed in the PowerShell profile folder.
+            # Check if GTweaks's PowerShell profile is currently installed in the PowerShell profile folder.
             if ((Get-Content $PSProfile) -match $PSProfileIdentifier) {
-                # Attempt to uninstall Chris Titus Tech's PowerShell profile from the PowerShell profile folder.
+                # Attempt to uninstall GTweaks's PowerShell profile from the PowerShell profile folder.
                 try {
                     # Get the content of the backup PowerShell profile and store it in-memory.
                     $PSProfileContent = Get-Content "$PSProfile.bak"
@@ -189,12 +189,12 @@ function Invoke-WinUtilUninstallPSProfile {
                     Write-Host "Failed to uninstall Zoxide. Error: $_" -ForegroundColor Red
                 }
 
-                # Attempt to uninstall the CTT PowerShell profile from the system.
+                # Attempt to uninstall the GTweaks PowerShell profile from the system.
                 try {
-                    # Try and remove the CTT PowerShell Profile file from the disk with Remove-Item.
+                    # Try and remove the GTweaks PowerShell Profile file from the disk with Remove-Item.
                     Remove-Item $PSProfile
 
-                    # Let the user know that the CTT PowerShell profile has been uninstalled from the system.
+                    # Let the user know that the GTweaks PowerShell profile has been uninstalled from the system.
                     Write-Host "Profile has been uninstalled. Please restart your shell to reflect the changes!" -ForegroundColor Magenta
                 } catch {
                     # Let the user know that an error was encountered when uninstalling the profile.
@@ -216,11 +216,11 @@ function Invoke-WinUtilUninstallPSProfile {
                     Write-Host "Failed to restore profile backup. Error: $_" -ForegroundColor Red
                 }
 
-                # Silently cleanup the oldprofile.ps1 file that was created when the CTT PowerShell profile was installed.
+                # Silently cleanup the oldprofile.ps1 file that was created when the GTweaks PowerShell profile was installed.
                 Remove-Item "$env:USERPROFILE\oldprofile.ps1" | Out-Null
             } else {
-                # Let the user know that the CTT PowerShell profile is not installed and that the uninstallation was skipped.
-                Write-Host "===> Chris Titus Tech's PowerShell Profile Not Found. Skipped Uninstallation. <===" -ForegroundColor Magenta
+                # Let the user know that the GTweaks PowerShell profile is not installed and that the uninstallation was skipped.
+                Write-Host "===> GTweaks's PowerShell Profile Not Found. Skipped Uninstallation. <===" -ForegroundColor Magenta
             }
         } else {
             # Let the user know that no PowerShell profile was found and that the uninstallation was skipped.
@@ -228,4 +228,6 @@ function Invoke-WinUtilUninstallPSProfile {
         }
     }
 }
+
+
 

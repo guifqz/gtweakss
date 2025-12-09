@@ -7,7 +7,7 @@ function Invoke-Microwin {
 
     if($sync.ProcessRunning) {
         $msg = "GetIso process is currently running."
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
@@ -42,11 +42,11 @@ public class PowerManagement {
         $msg = "No file name for the target image was specified"
         Write-Host $msg
         Invoke-MicrowinBusyInfo -action "warning" -message $msg
-        Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+        Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
         return
     }
 
-    Set-WinUtilTaskbaritem -state "Indeterminate" -overlay "logo"
+    Set-GTweaksTaskbaritem -state "Indeterminate" -overlay "logo"
     Invoke-MicrowinBusyInfo -action "wip" -message "Busy..." -interactive $false
 
     Write-Host "Target ISO location: $($SaveDialog.FileName)"
@@ -83,9 +83,9 @@ public class PowerManagement {
         } else {
             $msg = "The export process has failed and MicroWin processing cannot continue"
             Write-Host $msg
-            Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+            Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
             Invoke-MicrowinBusyInfo -action "warning" -message $msg
-            [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+            [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
             return
         }
     }
@@ -98,8 +98,8 @@ public class PowerManagement {
         $msg = "This image is not compatible with MicroWin processing. Make sure it isn't a Windows 8 or earlier image."
         $dlg_msg = $msg + "`n`nIf you want more information, the version of the image selected is $($imgVersion)`n`nIf an image has been incorrectly marked as incompatible, report an issue to the developers."
         Write-Host $msg
-        [System.Windows.MessageBox]::Show($dlg_msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Exclamation)
-        Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+        [System.Windows.MessageBox]::Show($dlg_msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Exclamation)
+        Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
         Invoke-MicrowinBusyInfo -action "warning" -message $msg
         return
     }
@@ -109,7 +109,7 @@ public class PowerManagement {
         $msg = "Windows 10 has been detected in the image you want to process. While you can continue, Windows 10 is not a recommended target for MicroWin, and you may not get the full experience."
         $dlg_msg = $msg
         Write-Host $msg
-        [System.Windows.MessageBox]::Show($dlg_msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Exclamation)
+        [System.Windows.MessageBox]::Show($dlg_msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Exclamation)
     }
 
     $mountDirExists = Test-Path $mountDir
@@ -117,7 +117,7 @@ public class PowerManagement {
     if (-not $mountDirExists -or -not $scratchDirExists) {
         $msg = "Required directories '$mountDirExists' '$scratchDirExists' and do not exist."
         Write-Error $msg
-        Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+        Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
         Invoke-MicrowinBusyInfo -action "warning" -message $msg
         return
     }
@@ -131,7 +131,7 @@ public class PowerManagement {
         } else {
             $msg = "Could not mount image. Exiting..."
             Write-Host $msg
-            Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+            Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
             Invoke-MicrowinBusyInfo -action "warning" -message $msg
             return
         }
@@ -263,7 +263,7 @@ public class PowerManagement {
             try
             {
                 Write-Host "A configuration file has been specified. Copying to WIM file..."
-                Copy-Item "$($sync.MicrowinAutoConfigBox.Text)" "$($scratchDir)\winutil-config.json"
+                Copy-Item "$($sync.MicrowinAutoConfigBox.Text)" "$($scratchDir)\GTweaks-config.json"
             }
             catch
             {
@@ -302,7 +302,7 @@ public class PowerManagement {
         Copy-Item "$env:temp\FirstStartup.ps1" "$($scratchDir)\Windows\FirstStartup.ps1" -force
         Write-Host "Done copy FirstRun.ps1"
 
-        Write-Host "Copy link to winutil.ps1 into the ISO"
+        Write-Host "Copy link to GTweaks.ps1 into the ISO"
         $desktopDir = "$($scratchDir)\Windows\Users\Default\Desktop"
         New-Item -ItemType Directory -Force -Path "$desktopDir"
         dism /English /image:$($scratchDir) /set-profilepath:"$($scratchDir)\Windows\Users\Default"
@@ -428,7 +428,7 @@ public class PowerManagement {
             $msg = "Something went wrong. Please report this bug to the devs."
             Write-Error "$($msg) '$($mountDir)\sources\install.wim' doesn't exist"
             Invoke-MicrowinBusyInfo -action "warning" -message $msg
-            Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+            Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
             return
         }
         Write-Host "Windows image completed. Continuing with boot.wim."
@@ -524,16 +524,16 @@ public class PowerManagement {
         Write-Host "| |__/ / |_| | | | ( (/ /    "
         Write-Host "|_____/ \___/|_| |_|\____)   "
 
-        # Check if the ISO was successfully created - CTT edit
+        # Check if the ISO was successfully created - GTweaks edit
         if ($LASTEXITCODE -eq 0) {
             Write-Host "`n`nPerforming Cleanup..."
                 Remove-Item -Recurse -Force "$($scratchDir)"
                 Remove-Item -Recurse -Force "$($mountDir)"
             $msg = "Done. ISO image is located here: $($SaveDialog.FileName)"
             Write-Host $msg
-            Set-WinUtilTaskbaritem -state "None" -overlay "checkmark"
+            Set-GTweaksTaskbaritem -state "None" -overlay "checkmark"
             Invoke-MicrowinBusyInfo -action "done" -message "Finished!"
-            [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
+            [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
         } else {
             Write-Host "ISO creation failed. The "$($mountDir)" directory has not been removed."
             try {
@@ -542,8 +542,8 @@ public class PowerManagement {
                 $exitCode = New-Object System.ComponentModel.Win32Exception($LASTEXITCODE)
                 Write-Host "Reason: $($exitCode.Message)"
                 Invoke-MicrowinBusyInfo -action "warning" -message $exitCode.Message
-                Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
-                [System.Windows.MessageBox]::Show("MicroWin failed to make the ISO.", "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+                Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
+                [System.Windows.MessageBox]::Show("MicroWin failed to make the ISO.", "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
             } catch {
                 # Could not get error description from Windows APIs
             }
@@ -557,3 +557,5 @@ public class PowerManagement {
         $sync.ProcessRunning = $false
     }
 }
+
+

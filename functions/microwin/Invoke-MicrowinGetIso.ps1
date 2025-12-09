@@ -8,7 +8,7 @@ function Invoke-MicrowinGetIso {
 
     if($sync.ProcessRunning) {
         $msg = "GetIso process is currently running."
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
@@ -50,7 +50,7 @@ function Invoke-MicrowinGetIso {
             return
         }
 
-        Set-WinUtilTaskbaritem -state "Indeterminate" -overlay "logo"
+        Set-GTweaksTaskbaritem -state "Indeterminate" -overlay "logo"
         Invoke-MicrowinBusyInfo -action "wip" -message "Preparing to download ISO..." -interactive $false
 
         # Grab the location of the selected path
@@ -77,11 +77,11 @@ function Invoke-MicrowinGetIso {
         if (-not $?)
         {
             Write-Host "Could not download the ISO file. Look at the output of the console for more information."
-            Write-Host "If you get an error about scripts is disabled on this system please close WinUtil and run - 'Set-ExecutionPolicy -ExecutionPolicy Unrestricted' and select 'A' and retry using MicroWin again."
+            Write-Host "If you get an error about scripts is disabled on this system please close GTweaks and run - 'Set-ExecutionPolicy -ExecutionPolicy Unrestricted' and select 'A' and retry using MicroWin again."
             $msg = "The ISO file could not be downloaded"
             Invoke-MicrowinBusyInfo -action "warning" -message $msg
-            Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
-            [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+            Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
+            [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
             return
         }
         Set-Location $originalLocation
@@ -115,11 +115,11 @@ function Invoke-MicrowinGetIso {
     if (-not (Test-Path -Path "$filePath" -PathType Leaf)) {
         $msg = "File you've chosen doesn't exist"
         Invoke-MicrowinBusyInfo -action "warning" -message $msg
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
         return
     }
 
-    Set-WinUtilTaskbaritem -state "Indeterminate" -overlay "logo"
+    Set-GTweaksTaskbaritem -state "Indeterminate" -overlay "logo"
     Invoke-MicrowinBusyInfo -action "wip" -message "Checking system requirements..." -interactive $false
 
     $oscdimgPath = Join-Path $env:TEMP 'oscdimg.exe'
@@ -132,10 +132,10 @@ function Invoke-MicrowinGetIso {
         if (!$downloadFromGitHub) {
             # only show the message to people who did check the box to download from github, if you check the box
             # you consent to downloading it, no need to show extra dialogs
-            [System.Windows.MessageBox]::Show("oscdimg.exe is not found on the system, winutil will now attempt do download and install it using choco. This might take a long time.")
+            [System.Windows.MessageBox]::Show("oscdimg.exe is not found on the system, GTweaks will now attempt do download and install it using choco. This might take a long time.")
             # the step below needs choco to download oscdimg
             # Install Choco if not already present
-            Install-WinUtilChoco
+            Install-GTweaksChoco
             $chocoFound = [bool] (Get-Command -ErrorAction Ignore -Type Application choco)
             Write-Host "choco on system: $chocoFound"
             if (!$chocoFound) {
@@ -144,19 +144,19 @@ function Invoke-MicrowinGetIso {
             }
 
             Start-Process -Verb runas -FilePath powershell.exe -ArgumentList "choco install windows-adk-oscdimg"
-            $msg = "oscdimg is installed, now close, reopen PowerShell terminal and re-launch winutil.ps1"
+            $msg = "oscdimg is installed, now close, reopen PowerShell terminal and re-launch GTweaks.ps1"
             Invoke-MicrowinBusyInfo -action "done" -message $msg        # We set it to done because it immediately returns from this function
             [System.Windows.MessageBox]::Show($msg)
             return
         } else {
-            [System.Windows.MessageBox]::Show("oscdimg.exe is not found on the system, winutil will now attempt do download and install it from github. This might take a long time.")
+            [System.Windows.MessageBox]::Show("oscdimg.exe is not found on the system, GTweaks will now attempt do download and install it from github. This might take a long time.")
             Invoke-MicrowinBusyInfo -action "wip" -message "Downloading oscdimg.exe..." -interactive $false
             Microwin-GetOscdimg -oscdimgPath $oscdimgPath
             $oscdImgFound = Test-Path $oscdimgPath -PathType Leaf
             if (!$oscdImgFound) {
                 $msg = "oscdimg was not downloaded can not proceed"
                 Invoke-MicrowinBusyInfo -action "warning" -message $msg
-                [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+                [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
                 return
             } else {
                 Write-Host "oscdimg.exe was successfully downloaded from github"
@@ -181,7 +181,7 @@ function Invoke-MicrowinGetIso {
         # It's critical and we can't continue. Output an error
         $msg = "You don't have enough space for this operation. You need at least $([Math]::Round(($isoSize / ([Math]::Pow(1024, 2))) * 2, 2)) MB of free space to copy the ISO files to a temp directory and to be able to perform additional operations."
         Write-Host $msg
-        Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+        Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
         Invoke-MicrowinBusyInfo -action "warning" -message $msg
         return
     } else {
@@ -199,9 +199,9 @@ function Invoke-MicrowinGetIso {
         # @ChrisTitusTech  please copy this wiki and change the link below to your copy of the wiki
         $msg = "Failed to mount the image. Error: $($_.Exception.Message)"
         Write-Error $msg
-        Write-Error "This is NOT winutil's problem, your ISO might be corrupt, or there is a problem on the system"
-        Write-Host "Please refer to this wiki for more details: https://winutil.christitus.com/knownissues/" -ForegroundColor Red
-        Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+        Write-Error "This is NOT GTweaks's problem, your ISO might be corrupt, or there is a problem on the system"
+        Write-Host "Please refer to this wiki for more details: https://GTweaks.christitus.com/knownissues/" -ForegroundColor Red
+        Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
         Invoke-MicrowinBusyInfo -action "warning" -message $msg
         return
     }
@@ -285,8 +285,8 @@ function Invoke-MicrowinGetIso {
             $msg = "Neither install.wim nor install.esd exist in the image, this could happen if you use unofficial Windows images. Please don't use shady images from the internet."
             Write-Host "$($msg) Only use official images. Here are instructions how to download ISO images if the Microsoft website is not showing the link to download and ISO. https://www.techrepublic.com/article/how-to-download-a-windows-10-iso-file-without-using-the-media-creation-tool/"
             Invoke-MicrowinBusyInfo -action "warning" -message $msg
-            Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
-            [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+            Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
+            [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
             throw
         }
         elseif ((-not (Test-Path -Path $wimFile -PathType Leaf)) -and (Test-Path -Path $wimFile.Replace(".wim", ".esd").Trim() -PathType Leaf)) {
@@ -325,7 +325,7 @@ function Invoke-MicrowinGetIso {
         Remove-Item -Recurse -Force "$($scratchDir)"
         Remove-Item -Recurse -Force "$($mountDir)"
         Invoke-MicrowinBusyInfo -action "warning" -message "Failed to read and unpack ISO"
-        Set-WinUtilTaskbaritem -state "Error" -value 1 -overlay "warning"
+        Set-GTweaksTaskbaritem -state "Error" -value 1 -overlay "warning"
 
     }
 
@@ -336,5 +336,7 @@ function Invoke-MicrowinGetIso {
 
     Invoke-MicrowinBusyInfo -action "done" -message "Done! Proceed with customization."
     $sync.ProcessRunning = $false
-    Set-WinUtilTaskbaritem -state "None" -overlay "checkmark"
+    Set-GTweaksTaskbaritem -state "None" -overlay "checkmark"
 }
+
+

@@ -1,4 +1,4 @@
-Function Get-WinUtilCheckBoxes {
+Function Get-GTweaksCheckBoxes {
 
     <#
 
@@ -12,7 +12,7 @@ Function Get-WinUtilCheckBoxes {
         A List containing the name of each checked checkbox
 
     .EXAMPLE
-        Get-WinUtilCheckBoxes "WPFInstall"
+        Get-GTweaksCheckBoxes "WPFInstall"
 
     #>
 
@@ -81,3 +81,5 @@ Function Get-WinUtilCheckBoxes {
     }
     return  $Output
 }
+
+

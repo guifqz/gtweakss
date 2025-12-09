@@ -107,12 +107,14 @@ function Microwin-NewFirstRun {
     Write-Host "The taskbar will take around a minute to show up, but you can start using your computer now. Try pressing the Windows key to open the Start menu, or Windows + E to launch File Explorer."
     Start-Sleep -Seconds 10
 
-    if (Test-Path -Path "$env:HOMEDRIVE\winutil-config.json")
+    if (Test-Path -Path "$env:HOMEDRIVE\GTweaks-config.json")
     {
         Write-Host "Configuration file detected. Applying..."
-        iex "& { $(irm christitus.com/win) } -Config `"$env:HOMEDRIVE\winutil-config.json`" -Run"
+        iex "& { $(irm christitus.com/win) } -Config `"$env:HOMEDRIVE\GTweaks-config.json`" -Run"
     }
 
 '@
     $firstRun | Out-File -FilePath "$env:temp\FirstStartup.ps1" -Force
 }
+
+

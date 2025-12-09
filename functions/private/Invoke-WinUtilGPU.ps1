@@ -1,4 +1,4 @@
-function Invoke-WinUtilGPU {
+function Invoke-GTweaksGPU {
     $gpuInfo = Get-CimInstance Win32_VideoController
 
     # GPUs to blacklist from using Demanding Theming
@@ -21,3 +21,5 @@ function Invoke-WinUtilGPU {
     }
     return $true
 }
+
+

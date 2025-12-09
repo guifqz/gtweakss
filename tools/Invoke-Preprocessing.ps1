@@ -1,4 +1,4 @@
-function Invoke-Preprocessing {
+﻿function Invoke-Preprocessing {
     <#
         .SYNOPSIS
         A function that does Code Formatting using RegEx, useful when trying to force specific coding standard(s) to a project.
@@ -141,7 +141,7 @@ function Invoke-Preprocessing {
         $fullFileName = $files[$i]
 
         # TODO:
-        #   make more formatting rules, and document them in WinUtil Official Documentation
+        #   make more formatting rules, and document them in GTweaks Official Documentation
         (Get-Content "$fullFileName").TrimEnd() `
             -replace ('\t', '    ') `
             -replace ('\)\s*\{', ') {') `
@@ -165,3 +165,5 @@ function Invoke-Preprocessing {
     # Save the new hashes to the file  
     $newHashes | ConvertTo-Json -Depth 10 | Set-Content -Path $hashFilePath
 }
+
+

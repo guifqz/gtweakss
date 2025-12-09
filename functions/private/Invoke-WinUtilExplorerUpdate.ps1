@@ -1,4 +1,4 @@
-function Invoke-WinUtilExplorerUpdate {
+function Invoke-GTweaksExplorerUpdate {
     <#
     .SYNOPSIS
         Refreshes the Windows Explorer
@@ -41,3 +41,5 @@ public class Win32 {
         Start-Process "explorer.exe"
     }
 }
+
+

@@ -8,15 +8,15 @@ function Invoke-WPFundoall {
 
     if($sync.ProcessRunning) {
         $msg = "[Invoke-WPFundoall] Install process is currently running."
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
-    $tweaks = (Get-WinUtilCheckBoxes)["WPFtweaks"]
+    $tweaks = (Get-GTweaksCheckBoxes)["WPFtweaks"]
 
     if ($tweaks.count -eq 0) {
         $msg = "Please check the tweaks you wish to undo."
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
@@ -25,24 +25,26 @@ function Invoke-WPFundoall {
 
         $sync.ProcessRunning = $true
         if ($tweaks.count -eq 1) {
-            $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Indeterminate" -value 0.01 -overlay "logo" })
+            $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Indeterminate" -value 0.01 -overlay "logo" })
         } else {
-            $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Normal" -value 0.01 -overlay "logo" })
+            $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Normal" -value 0.01 -overlay "logo" })
         }
 
 
         for ($i = 0; $i -lt $tweaks.Count; $i++) {
-            Set-WinUtilProgressBar -Label "Undoing $($tweaks[$i])" -Percent ($i / $tweaks.Count * 100)
-            Invoke-WinUtiltweaks $tweaks[$i] -undo $true
-            $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -value ($i/$tweaks.Count) })
+            Set-GTweaksProgressBar -Label "Undoing $($tweaks[$i])" -Percent ($i / $tweaks.Count * 100)
+            Invoke-GTweakstweaks $tweaks[$i] -undo $true
+            $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -value ($i/$tweaks.Count) })
         }
 
-        Set-WinUtilProgressBar -Label "Undo Tweaks Finished" -Percent 100
+        Set-GTweaksProgressBar -Label "Undo Tweaks Finished" -Percent 100
         $sync.ProcessRunning = $false
-        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "None" -overlay "checkmark" })
+        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "None" -overlay "checkmark" })
         Write-Host "=================================="
         Write-Host "---  Undo Tweaks are Finished  ---"
         Write-Host "=================================="
 
     }
 }
+
+

@@ -1,4 +1,4 @@
-function Get-WinUtilInstallerProcess {
+function Get-GTweaksInstallerProcess {
     <#
 
     .SYNOPSIS
@@ -22,3 +22,5 @@ function Get-WinUtilInstallerProcess {
     }
     return $false
 }
+
+

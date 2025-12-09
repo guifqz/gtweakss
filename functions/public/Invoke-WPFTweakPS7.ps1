@@ -17,7 +17,7 @@ function Invoke-WPFTweakPS7{
                 Write-Host "Powershell 7 is already installed."
             } else {
                 Write-Host "Installing Powershell 7..."
-                Install-WinUtilProgramWinget -Action Install -Programs @("Microsoft.PowerShell")
+                Install-GTweaksProgramWinget -Action Install -Programs @("Microsoft.PowerShell")
             }
             $targetTerminalName = "PowerShell"
         }
@@ -51,3 +51,5 @@ function Invoke-WPFTweakPS7{
         Write-Host "No PowerShell 7 profile found in Windows Terminal settings using the name attribute."
     }
 }
+
+

@@ -8,10 +8,12 @@ function Invoke-WPFSSHServer {
 
     Invoke-WPFRunspace -DebugPreference $DebugPreference -ScriptBlock {
 
-        Invoke-WinUtilSSHServer
+        Invoke-GTweaksSSHServer
 
         Write-Host "======================================="
         Write-Host "--     OpenSSH Server installed!    ---"
         Write-Host "======================================="
     }
 }
+
+

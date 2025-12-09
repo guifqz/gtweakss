@@ -10,7 +10,7 @@ function Invoke-WPFInstall {
 
     if($sync.ProcessRunning) {
         $msg = "[Invoke-WPFInstall] An Install process is currently running."
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
@@ -25,7 +25,7 @@ function Invoke-WPFInstall {
     Invoke-WPFRunspace -ParameterList @(("PackagesToInstall", $PackagesToInstall),("ManagerPreference", $ManagerPreference)) -DebugPreference $DebugPreference -ScriptBlock {
         param($PackagesToInstall, $ManagerPreference, $DebugPreference)
 
-        $packagesSorted = Get-WinUtilSelectedPackages -PackageList $PackagesToInstall -Preference $ManagerPreference
+        $packagesSorted = Get-GTweaksSelectedPackages -PackageList $PackagesToInstall -Preference $ManagerPreference
 
         $packagesWinget = $packagesSorted[[PackageManagers]::Winget]
         $packagesChoco = $packagesSorted[[PackageManagers]::Choco]
@@ -34,24 +34,26 @@ function Invoke-WPFInstall {
             $sync.ProcessRunning = $true
             if($packagesWinget.Count -gt 0 -and $packagesWinget -ne "0") {
                 Show-WPFInstallAppBusy -text "Installing apps..."
-                Install-WinUtilWinget
-                Install-WinUtilProgramWinget -Action Install -Programs $packagesWinget
+                Install-GTweaksWinget
+                Install-GTweaksProgramWinget -Action Install -Programs $packagesWinget
             }
             if($packagesChoco.Count -gt 0) {
-                Install-WinUtilChoco
-                Install-WinUtilProgramChoco -Action Install -Programs $packagesChoco
+                Install-GTweaksChoco
+                Install-GTweaksProgramChoco -Action Install -Programs $packagesChoco
             }
             Hide-WPFInstallAppBusy
             Write-Host "==========================================="
             Write-Host "--      Installs have finished          ---"
             Write-Host "==========================================="
-            $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "None" -overlay "checkmark" })
+            $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "None" -overlay "checkmark" })
         } catch {
             Write-Host "==========================================="
             Write-Host "Error: $_"
             Write-Host "==========================================="
-            $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Error" -overlay "warning" })
+            $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Error" -overlay "warning" })
         }
         $sync.ProcessRunning = $False
     }
 }
+
+

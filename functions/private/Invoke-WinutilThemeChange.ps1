@@ -1,4 +1,4 @@
-function Invoke-WinutilThemeChange {
+function Invoke-GTweaksThemeChange {
     <#
     .SYNOPSIS
         Toggles between light and dark themes for a Windows utility application.
@@ -12,11 +12,11 @@ function Invoke-WinutilThemeChange {
         A switch parameter. If set to $true, the function initializes the theme based on the system’s current dark mode setting.
 
     .EXAMPLE
-        Invoke-WinutilThemeChange
+        Invoke-GTweaksThemeChange
         # Toggles the theme between 'Light' and 'Dark'.
 
     .EXAMPLE
-        Invoke-WinutilThemeChange -init
+        Invoke-GTweaksThemeChange -init
         # Initializes the theme based on the system's dark mode and applies the shared theme.
     #>
     param (
@@ -24,7 +24,7 @@ function Invoke-WinutilThemeChange {
         [string]$theme
     )
 
-    function Set-WinutilTheme {
+    function Set-GTweaksTheme {
         <#
         .SYNOPSIS
             Applies the specified theme to the application's user interface.
@@ -129,11 +129,11 @@ function Invoke-WinutilThemeChange {
         }
     }
 
-    $LightPreferencePath = "$env:LOCALAPPDATA\winutil\LightTheme.ini"
-    $DarkPreferencePath = "$env:LOCALAPPDATA\winutil\DarkTheme.ini"
+    $LightPreferencePath = "$env:LOCALAPPDATA\GTweaks\LightTheme.ini"
+    $DarkPreferencePath = "$env:LOCALAPPDATA\GTweaks\DarkTheme.ini"
 
     if ($init) {
-        Set-WinutilTheme -currentTheme "shared"
+        Set-GTweaksTheme -currentTheme "shared"
         if (Test-Path $LightPreferencePath) {
             $theme = "Light"
         }
@@ -147,12 +147,12 @@ function Invoke-WinutilThemeChange {
 
     switch ($theme) {
         "Auto" {
-            $systemUsesDarkMode = Get-WinUtilToggleStatus WPFToggleDarkMode
+            $systemUsesDarkMode = Get-GTweaksToggleStatus WPFToggleDarkMode
             if ($systemUsesDarkMode) {
-                Set-WinutilTheme  -currentTheme "Dark"
+                Set-GTweaksTheme  -currentTheme "Dark"
             }
             else{
-                Set-WinutilTheme  -currentTheme "Light"
+                Set-GTweaksTheme  -currentTheme "Light"
             }
 
 
@@ -161,13 +161,13 @@ function Invoke-WinutilThemeChange {
             Remove-Item $DarkPreferencePath -Force -ErrorAction SilentlyContinue
         }
         "Dark" {
-            Set-WinutilTheme  -currentTheme $theme
+            Set-GTweaksTheme  -currentTheme $theme
             $themeButtonIcon = [char]0xE708
             $null = New-Item $DarkPreferencePath -Force
             Remove-Item $LightPreferencePath -Force -ErrorAction SilentlyContinue
            }
         "Light" {
-            Set-WinutilTheme  -currentTheme $theme
+            Set-GTweaksTheme  -currentTheme $theme
             $themeButtonIcon = [char]0xE706
             $null = New-Item $LightPreferencePath -Force
             Remove-Item $DarkPreferencePath -Force -ErrorAction SilentlyContinue
@@ -178,3 +178,5 @@ function Invoke-WinutilThemeChange {
     $ThemeButton = $sync.Form.FindName("ThemeButton")
     $ThemeButton.Content = [string]$themeButtonIcon
 }
+
+

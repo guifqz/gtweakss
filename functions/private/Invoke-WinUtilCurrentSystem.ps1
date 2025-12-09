@@ -1,4 +1,4 @@
-Function Invoke-WinUtilCurrentSystem {
+Function Invoke-GTweaksCurrentSystem {
 
     <#
 
@@ -6,7 +6,7 @@ Function Invoke-WinUtilCurrentSystem {
         Checks to see what tweaks have already been applied and what programs are installed, and checks the according boxes
 
     .EXAMPLE
-        Get-WinUtilCheckBoxes "WPFInstall"
+        Get-GTweaksCheckBoxes "WPFInstall"
 
     #>
 
@@ -15,7 +15,7 @@ Function Invoke-WinUtilCurrentSystem {
     )
     if ($CheckBox -eq "choco") {
         $apps = (choco list | Select-String -Pattern "^\S+").Matches.Value
-        $filter = Get-WinUtilVariables -Type Checkbox | Where-Object {$psitem -like "WPFInstall*"}
+        $filter = Get-GTweaksVariables -Type Checkbox | Where-Object {$psitem -like "WPFInstall*"}
         $sync.GetEnumerator() | Where-Object {$psitem.Key -in $filter} | ForEach-Object {
             $dependencies = @($sync.configs.applications.$($psitem.Key).choco -split ";")
             if ($dependencies -in $apps) {
@@ -31,7 +31,7 @@ Function Invoke-WinUtilCurrentSystem {
         $Sync.InstalledPrograms = winget list -s winget | Select-Object -skip 3 | ConvertFrom-String -PropertyNames "Name", "Id", "Version", "Available" -Delimiter '\s{2,}'
         [Console]::OutputEncoding = $originalEncoding
 
-        $filter = Get-WinUtilVariables -Type Checkbox | Where-Object {$psitem -like "WPFInstall*"}
+        $filter = Get-GTweaksVariables -Type Checkbox | Where-Object {$psitem -like "WPFInstall*"}
         $sync.GetEnumerator() | Where-Object {$psitem.Key -in $filter} | ForEach-Object {
             $dependencies = @($sync.configs.applications.$($psitem.Key).winget -split ";")
 
@@ -108,3 +108,5 @@ Function Invoke-WinUtilCurrentSystem {
         }
     }
 }
+
+

@@ -1,4 +1,4 @@
-Function Install-WinUtilProgramWinget {
+Function Install-GTweaksProgramWinget {
     <#
     .SYNOPSIS
     Runs the designated action on the provided programs using Winget
@@ -116,13 +116,13 @@ Function Install-WinUtilProgramWinget {
     for ($i = 0; $i -lt $count; $i++) {
         $Program = $Programs[$i]
         $result = $false
-        Set-WinUtilProgressBar -label "$Action $($Program)" -percent ($i / $count * 100)
-        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -value ($i / $count)})
+        Set-GTweaksProgressBar -label "$Action $($Program)" -percent ($i / $count * 100)
+        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -value ($i / $count)})
 
         $result = switch ($Action) {
             "Install" {Invoke-Install -Program $Program}
             "Uninstall" {Invoke-Uninstall -Program $Program}
-            default {throw "[Install-WinUtilProgramWinget] Invalid action: $Action"}
+            default {throw "[Install-GTweaksProgramWinget] Invalid action: $Action"}
         }
 
         if (-not $result) {
@@ -130,6 +130,8 @@ Function Install-WinUtilProgramWinget {
         }
     }
 
-    Set-WinUtilProgressBar -label "$($Action)ation done" -percent 100
+    Set-GTweaksProgressBar -label "$($Action)ation done" -percent 100
     return $failedPackages
 }
+
+

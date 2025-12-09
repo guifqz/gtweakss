@@ -1,4 +1,4 @@
-function Invoke-WinUtilSSHServer {
+function Invoke-GTweaksSSHServer {
     <#
     .SYNOPSIS
         Enables OpenSSH server to remote into your windows device
@@ -79,3 +79,5 @@ function Invoke-WinUtilSSHServer {
     Write-Host "The config file can be located at C:\ProgramData\ssh\sshd_config "
     Write-Host "Add your public keys to this file -> $authorizedKeysPath"
 }
+
+

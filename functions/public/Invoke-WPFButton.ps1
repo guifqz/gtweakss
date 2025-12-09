@@ -13,9 +13,9 @@ function Invoke-WPFButton {
     Param ([string]$Button)
 
     # Use this to get the name of the button
-    #[System.Windows.MessageBox]::Show("$Button","Chris Titus Tech's Windows Utility","OK","Info")
+    #[System.Windows.MessageBox]::Show("$Button","GTweaks's Windows Utility","OK","Info")
     if (-not $sync.ProcessRunning) {
-        Set-WinUtilProgressBar  -label "" -percent 0
+        Set-GTweaksProgressBar  -label "" -percent 0
     }
 
     Switch -Wildcard ($Button) {
@@ -53,18 +53,20 @@ function Invoke-WPFButton {
         "WPFFixesNetwork" {Invoke-WPFFixesNetwork}
         "WPFUpdatesdisable" {Invoke-WPFUpdatesdisable}
         "WPFUpdatessecurity" {Invoke-WPFUpdatessecurity}
-        "WPFWinUtilShortcut" {Invoke-WPFShortcut -ShortcutToAdd "WinUtil" -RunAsAdmin $true}
+        "WPFGTweaksShortcut" {Invoke-WPFShortcut -ShortcutToAdd "GTweaks" -RunAsAdmin $true}
         "WPFGetInstalled" {Invoke-WPFGetInstalled -CheckBox "winget"}
         "WPFGetInstalledTweaks" {Invoke-WPFGetInstalled -CheckBox "tweaks"}
         "WPFGetIso" {Invoke-MicrowinGetIso}
         "WPFMicrowin" {Invoke-Microwin}
         "WPFCloseButton" {Invoke-WPFCloseButton}
         "MicrowinScratchDirBT" {Invoke-ScratchDialog}
-        "WPFWinUtilInstallPSProfile" {Invoke-WinUtilInstallPSProfile}
-        "WPFWinUtilUninstallPSProfile" {Invoke-WinUtilUninstallPSProfile}
-        "WPFWinUtilSSHServer" {Invoke-WPFSSHServer}
+        "WPFGTweaksInstallPSProfile" {Invoke-GTweaksInstallPSProfile}
+        "WPFGTweaksUninstallPSProfile" {Invoke-GTweaksUninstallPSProfile}
+        "WPFGTweaksSSHServer" {Invoke-WPFSSHServer}
         "WPFselectedAppsButton" {$sync.selectedAppsPopup.IsOpen = -not $sync.selectedAppsPopup.IsOpen}
         "WPFMicrowinPanelBack" {Toggle-MicrowinPanel 1}
         "MicrowinAutoConfigBtn" {Invoke-AutoConfigDialog}
     }
 }
+
+

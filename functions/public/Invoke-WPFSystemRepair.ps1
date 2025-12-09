@@ -105,7 +105,7 @@ function Invoke-WPFSystemRepair {
     }
 
     try {
-        Set-WinUtilTaskbaritem -state "Indeterminate" -overlay "logo"
+        Set-GTweaksTaskbaritem -state "Indeterminate" -overlay "logo"
 
         $childProgressBarActivity = "Scanning for corruption"
         Write-Progress -Id 0 -Activity "Repairing Windows" -PercentComplete 0
@@ -125,13 +125,15 @@ function Invoke-WPFSystemRepair {
         Invoke-SFC
         Write-Progress -Id 0 -Activity "Repairing Windows" -PercentComplete 100 -Completed
 
-        Set-WinUtilTaskbaritem -state "None" -overlay "checkmark"
+        Set-GTweaksTaskbaritem -state "None" -overlay "checkmark"
     } catch {
         Write-Error "An error occurred while repairing the system: $_"
-        Set-WinUtilTaskbaritem -state "Error" -overlay "warning"
+        Set-GTweaksTaskbaritem -state "Error" -overlay "warning"
     } finally {
         Write-Host "==> Finished System Repair"
-        Set-WinUtilTaskbaritem -state "None" -overlay "checkmark"
+        Set-GTweaksTaskbaritem -state "None" -overlay "checkmark"
     }
 
 }
+
+

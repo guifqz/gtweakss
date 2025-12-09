@@ -1,4 +1,4 @@
-function Install-WinUtilWinget {
+function Install-GTweaksWinget {
     <#
 
     .SYNOPSIS
@@ -7,7 +7,7 @@ function Install-WinUtilWinget {
     .DESCRIPTION
         This function will download the latest version of Winget and install it. If Winget is already installed, it will do nothing.
     #>
-    $isWingetInstalled = Test-WinUtilPackageManager -winget
+    $isWingetInstalled = Test-GTweaksPackageManager -winget
 
     try {
         if ($isWingetInstalled -eq "installed") {
@@ -78,3 +78,5 @@ function Install-WinUtilWinget {
         throw
     }
 }
+
+

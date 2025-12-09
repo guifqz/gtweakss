@@ -8,25 +8,25 @@ function Invoke-WPFFeatureInstall {
 
     if($sync.ProcessRunning) {
         $msg = "[Invoke-WPFFeatureInstall] Install process is currently running."
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
-    $Features = (Get-WinUtilCheckBoxes)["WPFFeature"]
+    $Features = (Get-GTweaksCheckBoxes)["WPFFeature"]
 
     Invoke-WPFRunspace -ArgumentList $Features -DebugPreference $DebugPreference -ScriptBlock {
         param($Features, $DebugPreference)
         $sync.ProcessRunning = $true
         if ($Features.count -eq 1) {
-            $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Indeterminate" -value 0.01 -overlay "logo" })
+            $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Indeterminate" -value 0.01 -overlay "logo" })
         } else {
-            $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Normal" -value 0.01 -overlay "logo" })
+            $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Normal" -value 0.01 -overlay "logo" })
         }
 
-        Invoke-WinUtilFeatureInstall $Features
+        Invoke-GTweaksFeatureInstall $Features
 
         $sync.ProcessRunning = $false
-        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "None" -overlay "checkmark" })
+        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "None" -overlay "checkmark" })
 
         Write-Host "==================================="
         Write-Host "---   Features are Installed    ---"
@@ -34,3 +34,5 @@ function Invoke-WPFFeatureInstall {
         Write-Host "==================================="
     }
 }
+
+

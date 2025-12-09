@@ -1,4 +1,4 @@
-function Set-WinUtilRegistry {
+function Set-GTweaksRegistry {
     <#
 
     .SYNOPSIS
@@ -17,7 +17,7 @@ function Set-WinUtilRegistry {
         The value to set the key to
 
     .EXAMPLE
-        Set-WinUtilRegistry -Name "PublishUserActivities" -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Type "DWord" -Value "0"
+        Set-GTweaksRegistry -Name "PublishUserActivities" -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\System" -Type "DWord" -Value "0"
 
     #>
     param (
@@ -54,3 +54,5 @@ function Set-WinUtilRegistry {
         Write-Warning $psitem.Exception.StackTrace
     }
 }
+
+

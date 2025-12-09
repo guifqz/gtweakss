@@ -11,11 +11,11 @@ function Invoke-WPFGetInstalled {
     param($checkbox)
     if ($sync.ProcessRunning) {
         $msg = "[Invoke-WPFGetInstalled] Install process is currently running."
-        [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+        [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
         return
     }
 
-    if (($sync.ChocoRadioButton.IsChecked -eq $false) -and ((Test-WinUtilPackageManager -winget) -eq "not-installed") -and $checkbox -eq "winget") {
+    if (($sync.ChocoRadioButton.IsChecked -eq $false) -and ((Test-GTweaksPackageManager -winget) -eq "not-installed") -and $checkbox -eq "winget") {
         return
     }
     $managerPreference = $sync["ManagerPreference"]
@@ -26,18 +26,18 @@ function Invoke-WPFGetInstalled {
             [PackageManagers]$managerPreference
         )
         $sync.ProcessRunning = $true
-        $sync.form.Dispatcher.Invoke([action] { Set-WinUtilTaskbaritem -state "Indeterminate" })
+        $sync.form.Dispatcher.Invoke([action] { Set-GTweaksTaskbaritem -state "Indeterminate" })
 
         if ($checkbox -eq "winget") {
             Write-Host "Getting Installed Programs..."
             switch ($managerPreference) {
-                "Choco"{$Checkboxes = Invoke-WinUtilCurrentSystem -CheckBox "choco"; break}
-                "Winget"{$Checkboxes = Invoke-WinUtilCurrentSystem -CheckBox $checkbox; break}
+                "Choco"{$Checkboxes = Invoke-GTweaksCurrentSystem -CheckBox "choco"; break}
+                "Winget"{$Checkboxes = Invoke-GTweaksCurrentSystem -CheckBox $checkbox; break}
             }
         }
         elseif ($checkbox -eq "tweaks") {
             Write-Host "Getting Installed Tweaks..."
-            $Checkboxes = Invoke-WinUtilCurrentSystem -CheckBox $checkbox
+            $Checkboxes = Invoke-GTweaksCurrentSystem -CheckBox $checkbox
         }
 
         $sync.form.Dispatcher.invoke({
@@ -48,6 +48,8 @@ function Invoke-WPFGetInstalled {
 
         Write-Host "Done..."
         $sync.ProcessRunning = $false
-        $sync.form.Dispatcher.Invoke([action] { Set-WinUtilTaskbaritem -state "None" })
+        $sync.form.Dispatcher.Invoke([action] { Set-GTweaksTaskbaritem -state "None" })
     }
 }
+
+

@@ -1,4 +1,4 @@
-function Install-WinUtilChoco {
+function Install-GTweaksChoco {
 
     <#
 
@@ -10,7 +10,7 @@ function Install-WinUtilChoco {
     try {
         Write-Host "Checking if Chocolatey is Installed..."
 
-        if((Test-WinUtilPackageManager -choco) -eq "installed") {
+        if((Test-GTweaksPackageManager -choco) -eq "installed") {
             return
         }
         # Install logic taken from https://chocolatey.org/install#individual
@@ -26,3 +26,5 @@ function Install-WinUtilChoco {
     }
 
 }
+
+

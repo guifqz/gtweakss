@@ -38,10 +38,10 @@ function Microwin-NewCheckInstall {
     ) else (
         echo %HOMEDRIVE%\Windows\FirstStartup.ps1 does not exist
     )
-    if exist "%HOMEDRIVE%\Windows\winutil.ps1" (
-        echo %HOMEDRIVE%\Windows\winutil.ps1 exists
+    if exist "%HOMEDRIVE%\Windows\GTweaks.ps1" (
+        echo %HOMEDRIVE%\Windows\GTweaks.ps1 exists
     ) else (
-        echo %HOMEDRIVE%\Windows\winutil.ps1 does not exist
+        echo %HOMEDRIVE%\Windows\GTweaks.ps1 does not exist
     )
     if exist "%HOMEDRIVE%\Windows\LogSpecialize.txt" (
         echo %HOMEDRIVE%\Windows\LogSpecialize.txt exists
@@ -71,3 +71,5 @@ function Microwin-NewCheckInstall {
 '@
     $checkInstall | Out-File -FilePath "$env:temp\checkinstall.cmd" -Force -Encoding Ascii
 }
+
+

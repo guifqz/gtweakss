@@ -4,12 +4,12 @@ param (
     [string]$Arguments
 )
 
-if ((Get-Item ".\winutil.ps1" -ErrorAction SilentlyContinue).IsReadOnly) {
-    Remove-Item ".\winutil.ps1" -Force
+if ((Get-Item ".\GTweaks.ps1" -ErrorAction SilentlyContinue).IsReadOnly) {
+    Remove-Item ".\GTweaks.ps1" -Force
 }
 
 $OFS = "`r`n"
-$scriptname = "winutil.ps1"
+$scriptname = "GTweaks.ps1"
 $workingdir = $PSScriptRoot
 
 Push-Location
@@ -138,11 +138,11 @@ if ($Debug) {
 Set-Content -Path "$scriptname" -Value ($script_content -join "`r`n") -Encoding ascii
 Write-Progress -Activity "Compiling" -Completed
 
-Update-Progress -Activity "Validating" -StatusMessage "Checking winutil.ps1 Syntax" -Percent 0
+Update-Progress -Activity "Validating" -StatusMessage "Checking GTweaks.ps1 Syntax" -Percent 0
 try {
-    Get-Command -Syntax .\winutil.ps1 | Out-Null
+    Get-Command -Syntax .\GTweaks.ps1 | Out-Null
 } catch {
-    Write-Warning "Syntax Validation for 'winutil.ps1' has failed"
+    Write-Warning "Syntax Validation for 'GTweaks.ps1' has failed"
     Write-Host "$($Error[0])" -ForegroundColor Red
     Pop-Location # Restore previous location before exiting...
     exit 1
@@ -160,3 +160,5 @@ if ($run) {
     break
 }
 Pop-Location
+
+

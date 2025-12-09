@@ -19,7 +19,7 @@ $InitialSessionState = [System.Management.Automation.Runspaces.InitialSessionSta
 $InitialSessionState.Variables.Add($hashVars)
 
 # Get every private function and add them to the session state
-$functions = Get-ChildItem function:\ | Where-Object { $_.Name -imatch 'winutil|Microwin|WPF' }
+$functions = Get-ChildItem function:\ | Where-Object { $_.Name -imatch 'GTweaks|Microwin|WPF' }
 foreach ($function in $functions) {
     $functionDefinition = Get-Content function:\$($function.name)
     $functionEntry = New-Object System.Management.Automation.Runspaces.SessionStateFunctionEntry -ArgumentList $($function.name), $functionDefinition
@@ -79,14 +79,14 @@ try {
 
 if (-NOT ($readerOperationSuccessful)) {
     Write-Host "Failed to parse xaml content using Windows.Markup.XamlReader's Load Method." -ForegroundColor Red
-    Write-Host "Quitting winutil..." -ForegroundColor Red
+    Write-Host "Quitting GTweaks..." -ForegroundColor Red
     $sync.runspace.Dispose()
     $sync.runspace.Close()
     [System.GC]::Collect()
     exit 1
 }
 
-# Setup the Window to follow listen for windows Theme Change events and update the winutil theme
+# Setup the Window to follow listen for windows Theme Change events and update the GTweaks theme
 # throttle logic needed, because windows seems to send more than one theme change event per change
 $lastThemeChangeTime = [datetime]::MinValue
 $debounceInterval = [timespan]::FromSeconds(2)
@@ -105,7 +105,7 @@ $sync.Form.Add_Loaded({
         if (($msg -eq 0x001A) -and $sync.ThemeButton.Content -eq [char]0xF08C) {
             $currentTime = [datetime]::Now
             if ($currentTime - $lastThemeChangeTime -gt $debounceInterval) {
-                Invoke-WinutilThemeChange -theme "Auto"
+                Invoke-GTweaksThemeChange -theme "Auto"
                 $script:lastThemeChangeTime = $currentTime
                 $handled = $true
             }
@@ -114,7 +114,7 @@ $sync.Form.Add_Loaded({
     })
 })
 
-Invoke-WinutilThemeChange -init $true
+Invoke-GTweaksThemeChange -init $true
 # Load the configuration files
 
 $sync.configs.applicationsHashtable = @{}
@@ -141,7 +141,7 @@ Invoke-WPFUIElements -configVariable $sync.configs.feature -targetGridName "feat
 
 $xaml.SelectNodes("//*[@Name]") | ForEach-Object {$sync["$("$($psitem.Name)")"] = $sync["Form"].FindName($psitem.Name)}
 
-#Persist Package Manager preference across winutil restarts
+#Persist Package Manager preference across GTweaks restarts
 $sync.ChocoRadioButton.Add_Checked({Set-PackageManagerPreference Choco})
 $sync.WingetRadioButton.Add_Checked({Set-PackageManagerPreference Winget})
 Set-PackageManagerPreference
@@ -203,11 +203,11 @@ Invoke-WPFRunspace -ScriptBlock {
 #===========================================================================
 
 # Print the logo
-Show-CTTLogo
+Show-GTweaksLogo
 
-# Progress bar in taskbaritem > Set-WinUtilProgressbar
+# Progress bar in taskbaritem > Set-GTweaksProgressbar
 $sync["Form"].TaskbarItemInfo = New-Object System.Windows.Shell.TaskbarItemInfo
-Set-WinUtilTaskbaritem -state "None"
+Set-GTweaksTaskbaritem -state "None"
 
 # Set the titlebar
 $sync["Form"].title = $sync["Form"].title + " " + $sync.version
@@ -278,7 +278,7 @@ $sync["Form"].Add_MouseDoubleClick({
 })
 
 $sync["Form"].Add_Deactivated({
-    Write-Debug "WinUtil lost focus"
+    Write-Debug "GTweaks lost focus"
     Invoke-WPFPopup -Action "Hide" -Popups @("Settings", "Theme", "FontScaling")
 })
 
@@ -311,7 +311,7 @@ $sync["Form"].Add_ContentRendered({
     }
 
     # Check internet connectivity and disable install tab if offline
-    #$isOnline = Test-WinUtilInternetConnection
+    #$isOnline = Test-GTweaksInternetConnection
     $isOnline = $true # Temporarily force online mode until we can resolve false negatives
 
     if (-not $isOnline) {
@@ -445,29 +445,29 @@ $sync["Form"].Add_Loaded({
 })
 
 $NavLogoPanel = $sync["Form"].FindName("NavLogoPanel")
-$NavLogoPanel.Children.Add((Invoke-WinUtilAssets -Type "logo" -Size 25)) | Out-Null
+$NavLogoPanel.Children.Add((Invoke-GTweaksAssets -Type "logo" -Size 25)) | Out-Null
 
 # Initialize the hashtable
-$winutildir = @{}
+$GTweaksdir = @{}
 
-# Set the path for the winutil directory
-$winutildir["path"] = "$env:LOCALAPPDATA\winutil\"
-[System.IO.Directory]::CreateDirectory($winutildir["path"]) | Out-Null
+# Set the path for the GTweaks directory
+$GTweaksdir["path"] = "$env:LOCALAPPDATA\GTweaks\"
+[System.IO.Directory]::CreateDirectory($GTweaksdir["path"]) | Out-Null
 
-$winutildir["logo.ico"] = $winutildir["path"] + "cttlogo.ico"
+$GTweaksdir["logo.ico"] = $GTweaksdir["path"] + "GTweakslogo.ico"
 
-if (Test-Path $winutildir["logo.ico"]) {
-    $sync["logorender"] = $winutildir["logo.ico"]
+if (Test-Path $GTweaksdir["logo.ico"]) {
+    $sync["logorender"] = $GTweaksdir["logo.ico"]
 } else {
-    $sync["logorender"] = (Invoke-WinUtilAssets -Type "Logo" -Size 90 -Render)
+    $sync["logorender"] = (Invoke-GTweaksAssets -Type "Logo" -Size 90 -Render)
 }
-$sync["checkmarkrender"] = (Invoke-WinUtilAssets -Type "checkmark" -Size 512 -Render)
-$sync["warningrender"] = (Invoke-WinUtilAssets -Type "warning" -Size 512 -Render)
+$sync["checkmarkrender"] = (Invoke-GTweaksAssets -Type "checkmark" -Size 512 -Render)
+$sync["warningrender"] = (Invoke-GTweaksAssets -Type "warning" -Size 512 -Render)
 
-Set-WinUtilTaskbaritem -overlay "logo"
+Set-GTweaksTaskbaritem -overlay "logo"
 
 $sync["Form"].Add_Activated({
-    Set-WinUtilTaskbaritem -overlay "logo"
+    Set-GTweaksTaskbaritem -overlay "logo"
 })
 
 $sync["ThemeButton"].Add_Click({
@@ -477,17 +477,17 @@ $sync["ThemeButton"].Add_Click({
 $sync["AutoThemeMenuItem"].Add_Click({
     Write-Debug "About clicked"
     Invoke-WPFPopup -Action "Hide" -Popups @("Theme")
-    Invoke-WinutilThemeChange -theme "Auto"
+    Invoke-GTweaksThemeChange -theme "Auto"
 })
 $sync["DarkThemeMenuItem"].Add_Click({
     Write-Debug "Dark Theme clicked"
     Invoke-WPFPopup -Action "Hide" -Popups @("Theme")
-    Invoke-WinutilThemeChange -theme "Dark"
+    Invoke-GTweaksThemeChange -theme "Dark"
 })
 $sync["LightThemeMenuItem"].Add_Click({
     Write-Debug "Light Theme clicked"
     Invoke-WPFPopup -Action "Hide" -Popups @("Theme")
-    Invoke-WinutilThemeChange -theme "Light"
+    Invoke-GTweaksThemeChange -theme "Light"
 })
 
 $sync["SettingsButton"].Add_Click({
@@ -509,12 +509,12 @@ $sync["AboutMenuItem"].Add_Click({
     Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
 
     $authorInfo = @"
-Author   : <a href="https://github.com/ChrisTitusTech">@christitustech</a>
+Author   : <a href="https://github.com/guifqz">@christitustech</a>
 UI       : <a href="https://github.com/MyDrift-user">@MyDrift-user</a>, <a href="https://github.com/Marterich">@Marterich</a>
 Runspace : <a href="https://github.com/DeveloperDurp">@DeveloperDurp</a>, <a href="https://github.com/Marterich">@Marterich</a>
 MicroWin : <a href="https://github.com/KonTy">@KonTy</a>, <a href="https://github.com/CodingWonders">@CodingWonders</a>, <a href="https://github.com/Real-MullaC">@Real-MullaC</a>
-GitHub   : <a href="https://github.com/ChrisTitusTech/winutil">ChrisTitusTech/winutil</a>
-Version  : <a href="https://github.com/ChrisTitusTech/winutil/releases/tag/$($sync.version)">$($sync.version)</a>
+GitHub   : <a href="https://github.com/guifqz/GTweaks">guifqz/GTweaks</a>
+Version  : <a href="https://github.com/guifqz/GTweaks/releases/tag/$($sync.version)">$($sync.version)</a>
 "@
     Show-CustomDialog -Title "About" -Message $authorInfo
 })
@@ -527,7 +527,7 @@ $sync["SponsorMenuItem"].Add_Click({
 "@
     $authorInfo += "`n"
     try {
-        $sponsors = Invoke-WinUtilSponsors
+        $sponsors = Invoke-GTweaksSponsors
         foreach ($sponsor in $sponsors) {
             $authorInfo += "<a href=`"https://github.com/sponsors/ChrisTitusTech`">$sponsor</a>`n"
         }
@@ -558,9 +558,11 @@ $sync["FontScalingResetButton"].Add_Click({
 $sync["FontScalingApplyButton"].Add_Click({
     Write-Debug "FontScalingApplyButton clicked"
     $scaleFactor = $sync.FontScalingSlider.Value
-    Invoke-WinUtilFontScaling -ScaleFactor $scaleFactor
+    Invoke-GTweaksFontScaling -ScaleFactor $scaleFactor
     Invoke-WPFPopup -Action "Hide" -Popups @("FontScaling")
 })
 
 $sync["Form"].ShowDialog() | out-null
 Stop-Transcript
+
+

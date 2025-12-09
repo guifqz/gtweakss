@@ -13,7 +13,7 @@ function Microwin-GetOscdimg {
     )
 
     $oscdimgPath = "$env:TEMP\oscdimg.exe"
-    $downloadUrl = "https://github.com/ChrisTitusTech/winutil/raw/main/releases/oscdimg.exe"
+    $downloadUrl = "https://github.com/guifqz/GTweaks/raw/main/releases/oscdimg.exe"
     Invoke-RestMethod -Uri $downloadUrl -OutFile $oscdimgPath
     $hashResult = Get-FileHash -Path $oscdimgPath -Algorithm SHA256
     $sha256Hash = $hashResult.Hash
@@ -27,3 +27,4 @@ function Microwin-GetOscdimg {
         Write-Host "Hashes do not match. File may be corrupted or tampered with."
     }
 }
+

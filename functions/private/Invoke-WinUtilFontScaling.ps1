@@ -1,4 +1,4 @@
-function Invoke-WinUtilFontScaling {
+function Invoke-GTweaksFontScaling {
     <#
 
     .SYNOPSIS
@@ -9,7 +9,7 @@ function Invoke-WinUtilFontScaling {
         Default is 1.0 (100% - no scaling)
 
     .EXAMPLE
-        Invoke-WinUtilFontScaling -ScaleFactor 1.25
+        Invoke-GTweaksFontScaling -ScaleFactor 1.25
         # Applies 125% scaling
     #>
 
@@ -84,5 +84,7 @@ function Invoke-WinUtilFontScaling {
 
     Write-Debug "Font scaling applied with factor: $ScaleFactor"
 }
+
+
 
 

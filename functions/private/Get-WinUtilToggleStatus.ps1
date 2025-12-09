@@ -1,4 +1,4 @@
-Function Get-WinUtilToggleStatus {
+Function Get-GTweaksToggleStatus {
     <#
 
     .SYNOPSIS
@@ -76,3 +76,5 @@ Function Get-WinUtilToggleStatus {
         return $false
     }
 }
+
+

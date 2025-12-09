@@ -1,4 +1,4 @@
-function Invoke-WinUtilScript {
+function Invoke-GTweaksScript {
     <#
 
     .SYNOPSIS
@@ -12,7 +12,7 @@ function Invoke-WinUtilScript {
 
     .EXAMPLE
         $Scriptblock = [scriptblock]::Create({"Write-output 'Hello World'"})
-        Invoke-WinUtilScript -ScriptBlock $scriptblock -Name "Hello World"
+        Invoke-GTweaksScript -ScriptBlock $scriptblock -Name "Hello World"
 
     #>
     param (
@@ -42,3 +42,5 @@ function Invoke-WinUtilScript {
     }
 
 }
+
+

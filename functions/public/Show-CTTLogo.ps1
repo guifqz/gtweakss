@@ -1,22 +1,22 @@
-Function Show-CTTLogo {
+Function Show-GTweaksLogo {
     <#
         .SYNOPSIS
-            Displays the CTT logo in ASCII art.
+            Displays the GTweaks logo in ASCII art.
         .DESCRIPTION
-            This function displays the CTT logo in ASCII art format.
+            This function displays the GTweaks logo in ASCII art format.
         .PARAMETER None
             No parameters are required for this function.
         .EXAMPLE
-            Show-CTTLogo
-            Prints the CTT logo in ASCII art format to the console.
+            Show-GTweaksLogo
+            Prints the GTweaks logo in ASCII art format to the console.
     #>
 
     $asciiArt = @"
-    CCCCCCCCCCCCCTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+    CCCCCCCCCCCCGTweaksTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
  CCC::::::::::::CT:::::::::::::::::::::TT:::::::::::::::::::::T
 CC:::::::::::::::CT:::::::::::::::::::::TT:::::::::::::::::::::T
 C:::::CCCCCCCC::::CT:::::TT:::::::TT:::::TT:::::TT:::::::TT:::::T
-C:::::C       CCCCCCTTTTTT  T:::::T  TTTTTTTTTTTT  T:::::T  TTTTTT
+C:::::C       CCCCCGTweaksTTTT  T:::::T  TTTTTTTTTTTT  T:::::T  TTTTTT
 C:::::C                     T:::::T                T:::::T
 C:::::C                     T:::::T                T:::::T
 C:::::C                     T:::::T                T:::::T
@@ -29,10 +29,11 @@ CC:::::::::::::::C       T:::::::::T            T:::::::::T
 CCC::::::::::::C         T:::::::::T            T:::::::::T
   CCCCCCCCCCCCC          TTTTTTTTTTT            TTTTTTTTTTT
 
-====Chris Titus Tech=====
+====GTweaks=====
 =====Windows Toolbox=====
 "@
 
     Write-Host $asciiArt
 }
+
 

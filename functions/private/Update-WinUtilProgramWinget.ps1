@@ -1,4 +1,4 @@
-Function Update-WinUtilProgramWinget {
+Function Update-GTweaksProgramWinget {
 
     <#
 
@@ -19,3 +19,5 @@ Function Update-WinUtilProgramWinget {
     $global:WinGetInstall = Start-Process -Verb runas powershell -ArgumentList "-command invoke-command -scriptblock {$wingetinstall} -argumentlist '$($ProgramsToInstall -join ",")'" -PassThru
 
 }
+
+

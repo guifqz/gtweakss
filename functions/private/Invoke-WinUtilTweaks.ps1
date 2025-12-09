@@ -1,4 +1,4 @@
-function Invoke-WinUtilTweaks {
+function Invoke-GTweaksTweaks {
     <#
 
     .SYNOPSIS
@@ -11,7 +11,7 @@ function Invoke-WinUtilTweaks {
         Indicates whether to undo the operation contained in the checkbox
 
     .PARAMETER KeepServiceStartup
-        Indicates whether to override the startup of a service with the one given from WinUtil,
+        Indicates whether to override the startup of a service with the one given from GTweaks,
         or to keep the startup of said service, if it was changed by the user, or another program, from its default value.
     #>
 
@@ -42,7 +42,7 @@ function Invoke-WinUtilTweaks {
     if($sync.configs.tweaks.$CheckBox.ScheduledTask) {
         $sync.configs.tweaks.$CheckBox.ScheduledTask | ForEach-Object {
             Write-Debug "$($psitem.Name) and state is $($psitem.$($values.ScheduledTask))"
-            Set-WinUtilScheduledTask -Name $psitem.Name -State $psitem.$($values.ScheduledTask)
+            Set-GTweaksScheduledTask -Name $psitem.Name -State $psitem.$($values.ScheduledTask)
         }
     }
     if($sync.configs.tweaks.$CheckBox.service) {
@@ -66,7 +66,7 @@ function Invoke-WinUtilTweaks {
 
             if($changeservice) {
                 Write-Debug "$($psitem.Name) and state is $($psitem.$($values.service))"
-                Set-WinUtilService -Name $psitem.Name -StartupType $psitem.$($values.Service)
+                Set-GTweaksService -Name $psitem.Name -StartupType $psitem.$($values.Service)
             }
         }
     }
@@ -81,14 +81,14 @@ function Invoke-WinUtilTweaks {
                     Write-Debug "Failed to create HKU drive"
                 }
             }
-            Set-WinUtilRegistry -Name $psitem.Name -Path $psitem.Path -Type $psitem.Type -Value $psitem.$($values.registry)
+            Set-GTweaksRegistry -Name $psitem.Name -Path $psitem.Path -Type $psitem.Type -Value $psitem.$($values.registry)
         }
     }
     if($sync.configs.tweaks.$CheckBox.$($values.ScriptType)) {
         $sync.configs.tweaks.$CheckBox.$($values.ScriptType) | ForEach-Object {
             Write-Debug "$($psitem) and state is $($psitem.$($values.ScriptType))"
             $Scriptblock = [scriptblock]::Create($psitem)
-            Invoke-WinUtilScript -ScriptBlock $scriptblock -Name $CheckBox
+            Invoke-GTweaksScript -ScriptBlock $scriptblock -Name $CheckBox
         }
     }
 
@@ -96,9 +96,11 @@ function Invoke-WinUtilTweaks {
         if($sync.configs.tweaks.$CheckBox.appx) {
             $sync.configs.tweaks.$CheckBox.appx | ForEach-Object {
                 Write-Debug "UNDO $($psitem.Name)"
-                Remove-WinUtilAPPX -Name $psitem
+                Remove-GTweaksAPPX -Name $psitem
             }
         }
 
     }
 }
+
+

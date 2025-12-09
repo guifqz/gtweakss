@@ -1,4 +1,4 @@
-function Set-WinUtilTaskbaritem {
+function Set-GTweaksTaskbaritem {
     <#
 
     .SYNOPSIS
@@ -7,34 +7,34 @@ function Set-WinUtilTaskbaritem {
     .PARAMETER value
         Value can be between 0 and 1, 0 being no progress done yet and 1 being fully completed
         Value does not affect item without setting the state to 'Normal', 'Error' or 'Paused'
-        Set-WinUtilTaskbaritem -value 0.5
+        Set-GTweaksTaskbaritem -value 0.5
 
     .PARAMETER state
         State can be 'None' > No progress, 'Indeterminate' > inf. loading gray, 'Normal' > Gray, 'Error' > Red, 'Paused' > Yellow
         no value needed:
-        - Set-WinUtilTaskbaritem -state "None"
-        - Set-WinUtilTaskbaritem -state "Indeterminate"
+        - Set-GTweaksTaskbaritem -state "None"
+        - Set-GTweaksTaskbaritem -state "Indeterminate"
         value needed:
-        - Set-WinUtilTaskbaritem -state "Error"
-        - Set-WinUtilTaskbaritem -state "Normal"
-        - Set-WinUtilTaskbaritem -state "Paused"
+        - Set-GTweaksTaskbaritem -state "Error"
+        - Set-GTweaksTaskbaritem -state "Normal"
+        - Set-GTweaksTaskbaritem -state "Paused"
 
     .PARAMETER overlay
         Overlay icon to display on the taskbar item, there are the presets 'None', 'logo' and 'checkmark' or you can specify a path/link to an image file.
-        CTT logo preset:
-        - Set-WinUtilTaskbaritem -overlay "logo"
+        GTweaks logo preset:
+        - Set-GTweaksTaskbaritem -overlay "logo"
         Checkmark preset:
-        - Set-WinUtilTaskbaritem -overlay "checkmark"
+        - Set-GTweaksTaskbaritem -overlay "checkmark"
         Warning preset:
-        - Set-WinUtilTaskbaritem -overlay "warning"
+        - Set-GTweaksTaskbaritem -overlay "warning"
         No overlay:
-        - Set-WinUtilTaskbaritem -overlay "None"
+        - Set-GTweaksTaskbaritem -overlay "None"
         Custom icon (needs to be supported by WPF):
-        - Set-WinUtilTaskbaritem -overlay "C:\path\to\icon.png"
+        - Set-GTweaksTaskbaritem -overlay "C:\path\to\icon.png"
 
     .PARAMETER description
         Description to display on the taskbar item preview
-        Set-WinUtilTaskbaritem -description "This is a description"
+        Set-GTweaksTaskbaritem -description "This is a description"
     #>
     param (
         [string]$state,
@@ -54,7 +54,7 @@ function Set-WinUtilTaskbaritem {
             'Normal' { $sync["Form"].taskbarItemInfo.ProgressState = "Normal" }
             'Error' { $sync["Form"].taskbarItemInfo.ProgressState = "Error" }
             'Paused' { $sync["Form"].taskbarItemInfo.ProgressState = "Paused" }
-            default { throw "[Set-WinUtilTaskbarItem] Invalid state" }
+            default { throw "[Set-GTweaksTaskbarItem] Invalid state" }
         }
     }
 
@@ -84,3 +84,5 @@ function Set-WinUtilTaskbaritem {
         $sync["Form"].taskbarItemInfo.Description = $description
     }
 }
+
+

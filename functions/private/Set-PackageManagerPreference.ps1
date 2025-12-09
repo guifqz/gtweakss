@@ -2,7 +2,7 @@ function Set-PackageManagerPreference {
     <#
     .SYNOPSIS
         Sets the currently selected package manager to global "ManagerPreference" in sync.
-        Also persists preference across Winutil restarts via preference.ini.
+        Also persists preference across GTweaks restarts via preference.ini.
 
         Reads from preference.ini if no argument sent.
 
@@ -14,8 +14,8 @@ function Set-PackageManagerPreference {
         [PackageManagers]$preferredPackageManager
     )
 
-    $preferencePath = "$env:LOCALAPPDATA\winutil\preferences.ini"
-    $oldChocoPath = "$env:LOCALAPPDATA\winutil\preferChocolatey.ini"
+    $preferencePath = "$env:LOCALAPPDATA\GTweaks\preferences.ini"
+    $oldChocoPath = "$env:LOCALAPPDATA\GTweaks\preferChocolatey.ini"
 
     #Try loading from file if no argument given.
     if ($null -eq $preferredPackageManager) {
@@ -41,3 +41,5 @@ function Set-PackageManagerPreference {
     # Write preference to file to persist across restarts.
     Out-File -FilePath $preferencePath -InputObject $sync["ManagerPreference"]
 }
+
+

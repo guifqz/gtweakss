@@ -6,7 +6,7 @@ function Invoke-WPFInstallUpgrade {
 
     #>
     if ($sync.ChocoRadioButton.IsChecked) {
-        Install-WinUtilChoco
+        Install-GTweaksChoco
         $chocoUpgradeStatus = (Start-Process "choco" -ArgumentList "upgrade all -y" -Wait -PassThru -NoNewWindow).ExitCode
         if ($chocoUpgradeStatus -eq 0) {
             Write-Host "Upgrade Successful"
@@ -16,17 +16,17 @@ function Invoke-WPFInstallUpgrade {
         }
     }
     else{
-        if((Test-WinUtilPackageManager -winget) -eq "not-installed") {
+        if((Test-GTweaksPackageManager -winget) -eq "not-installed") {
             return
         }
 
-        if(Get-WinUtilInstallerProcess -Process $global:WinGetInstall) {
+        if(Get-GTweaksInstallerProcess -Process $global:WinGetInstall) {
             $msg = "[Invoke-WPFInstallUpgrade] Install process is currently running. Please check for a powershell window labeled 'Winget Install'"
-            [System.Windows.MessageBox]::Show($msg, "Winutil", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
+            [System.Windows.MessageBox]::Show($msg, "GTweaks", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Warning)
             return
         }
 
-        Update-WinUtilProgramWinget
+        Update-GTweaksProgramWinget
 
         Write-Host "==========================================="
         Write-Host "--           Updates started            ---"
@@ -34,3 +34,5 @@ function Invoke-WPFInstallUpgrade {
         Write-Host "==========================================="
     }
 }
+
+

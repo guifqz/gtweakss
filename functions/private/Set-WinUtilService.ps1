@@ -1,4 +1,4 @@
-Function Set-WinUtilService {
+Function Set-GTweaksService {
     <#
 
     .SYNOPSIS
@@ -11,7 +11,7 @@ Function Set-WinUtilService {
         The startup type to set the service to
 
     .EXAMPLE
-        Set-WinUtilService -Name "HomeGroupListener" -StartupType "Manual"
+        Set-GTweaksService -Name "HomeGroupListener" -StartupType "Manual"
 
     #>
     param (
@@ -38,3 +38,5 @@ Function Set-WinUtilService {
     }
 
 }
+
+

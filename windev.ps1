@@ -15,7 +15,7 @@
 # Function to fetch the latest release tag from the GitHub API
 function Get-LatestRelease {
     try {
-        $releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/ChrisTitusTech/winutil/releases'
+        $releases = Invoke-RestMethod -Uri 'https://api.github.com/repos/guifqz/GTweaks/releases'
         $latestRelease = $releases | Where-Object {$_.prerelease -eq $true} | Select-Object -First 1
         return $latestRelease.tag_name
     } catch {
@@ -25,20 +25,20 @@ function Get-LatestRelease {
 }
 
 # Function to redirect to the latest pre-release version
-function RedirectToLatestPreRelease {
+function RedireGTweaksoLatestPreRelease {
     $latestRelease = Get-LatestRelease
     if ($latestRelease) {
-        $url = "https://github.com/ChrisTitusTech/winutil/releases/download/$latestRelease/winutil.ps1"
+        $url = "https://github.com/guifqz/GTweaks/releases/download/$latestRelease/GTweaks.ps1"
     } else {
         Write-Host 'No pre-release version found. This is most likely because the latest release is a full release and no newer pre-release exists.' -ForegroundColor Yellow
         Write-Host "Using latest Full Release"
-        $url = "https://github.com/ChrisTitusTech/winutil/releases/latest/download/winutil.ps1"
+        $url = "https://github.com/guifqz/GTweaks/releases/latest/download/GTweaks.ps1"
     }
 
     $script = Invoke-RestMethod $url
     # Elevate Shell if necessary
     if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Write-Output "Winutil needs to be run as Administrator. Attempting to relaunch."
+        Write-Output "GTweaks needs to be run as Administrator. Attempting to relaunch."
 
         $powershellcmd = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell" }
         $processCmd = if (Get-Command wt.exe -ErrorAction SilentlyContinue) { "wt.exe" } else { $powershellcmd }
@@ -52,4 +52,6 @@ function RedirectToLatestPreRelease {
 
 # Call the redirect function
 
-RedirectToLatestPreRelease
+RedireGTweaksoLatestPreRelease
+
+

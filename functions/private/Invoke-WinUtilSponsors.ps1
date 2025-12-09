@@ -1,11 +1,11 @@
-Function Invoke-WinUtilSponsors {
+Function Invoke-GTweaksSponsors {
     <#
     .SYNOPSIS
         Lists Sponsors from ChrisTitusTech
     .DESCRIPTION
         Lists Sponsors from ChrisTitusTech
     .EXAMPLE
-        Invoke-WinUtilSponsors
+        Invoke-GTweaksSponsors
     .NOTES
         This function is used to list sponsors from ChrisTitusTech
     #>
@@ -42,3 +42,5 @@ Function Invoke-WinUtilSponsors {
         return $null
     }
 }
+
+

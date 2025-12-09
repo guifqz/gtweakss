@@ -8,19 +8,19 @@ function Invoke-WPFFixesNetwork {
 
     Write-Host "Resetting Network with netsh"
 
-    Set-WinUtilTaskbaritem -state "Normal" -value 0.01 -overlay "logo"
+    Set-GTweaksTaskbaritem -state "Normal" -value 0.01 -overlay "logo"
     # Reset WinSock catalog to a clean state
     Start-Process -NoNewWindow -FilePath "netsh" -ArgumentList "winsock", "reset"
 
-    Set-WinUtilTaskbaritem -state "Normal" -value 0.35 -overlay "logo"
+    Set-GTweaksTaskbaritem -state "Normal" -value 0.35 -overlay "logo"
     # Resets WinHTTP proxy setting to DIRECT
     Start-Process -NoNewWindow -FilePath "netsh" -ArgumentList "winhttp", "reset", "proxy"
 
-    Set-WinUtilTaskbaritem -state "Normal" -value 0.7 -overlay "logo"
+    Set-GTweaksTaskbaritem -state "Normal" -value 0.7 -overlay "logo"
     # Removes all user configured IP settings
     Start-Process -NoNewWindow -FilePath "netsh" -ArgumentList "int", "ip", "reset"
 
-    Set-WinUtilTaskbaritem -state "None" -overlay "checkmark"
+    Set-GTweaksTaskbaritem -state "None" -overlay "checkmark"
 
     Write-Host "Process complete. Please reboot your computer."
 
@@ -34,3 +34,5 @@ function Invoke-WPFFixesNetwork {
     Write-Host "-- Network Configuration has been Reset --"
     Write-Host "=========================================="
 }
+
+

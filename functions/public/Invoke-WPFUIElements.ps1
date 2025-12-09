@@ -1,7 +1,7 @@
 function Invoke-WPFUIElements {
     <#
     .SYNOPSIS
-        Adds UI elements to a specified Grid in the WinUtil GUI based on a JSON configuration.
+        Adds UI elements to a specified Grid in the GTweaks GUI based on a JSON configuration.
     .PARAMETER configVariable
         The variable/link containing the JSON configuration.
     .PARAMETER targetGridName
@@ -172,16 +172,16 @@ function Invoke-WPFUIElements {
 
                         $sync[$entryInfo.Name] = $checkBox
 
-                        $sync[$entryInfo.Name].IsChecked = (Get-WinUtilToggleStatus $entryInfo.Name)
+                        $sync[$entryInfo.Name].IsChecked = (Get-GTweaksToggleStatus $entryInfo.Name)
 
                         $sync[$entryInfo.Name].Add_Checked({
                             [System.Object]$Sender = $args[0]
-                            Invoke-WinUtilTweaks $sender.name
+                            Invoke-GTweaksTweaks $sender.name
                         })
 
                         $sync[$entryInfo.Name].Add_Unchecked({
                             [System.Object]$Sender = $args[0]
-                            Invoke-WinUtiltweaks $sender.name -undo $true
+                            Invoke-GTweakstweaks $sender.name -undo $true
                         })
                     }
 
@@ -356,3 +356,5 @@ function Invoke-WPFUIElements {
         }
     }
 }
+
+

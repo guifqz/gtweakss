@@ -1,4 +1,4 @@
-function Get-WinUtilSelectedPackages
+function Get-GTweaksSelectedPackages
 {
      <#
     .SYNOPSIS
@@ -15,9 +15,9 @@ function Get-WinUtilSelectedPackages
     )
 
     if ($PackageList.count -eq 1) {
-        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Indeterminate" -value 0.01 -overlay "logo" })
+        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Indeterminate" -value 0.01 -overlay "logo" })
     } else {
-        $sync.form.Dispatcher.Invoke([action]{ Set-WinUtilTaskbaritem -state "Normal" -value 0.01 -overlay "logo" })
+        $sync.form.Dispatcher.Invoke([action]{ Set-GTweaksTaskbaritem -state "Normal" -value 0.01 -overlay "logo" })
     }
 
     $packages = [System.Collections.Hashtable]::new()
@@ -57,3 +57,5 @@ function Get-WinUtilSelectedPackages
 
     return $packages
 }
+
+

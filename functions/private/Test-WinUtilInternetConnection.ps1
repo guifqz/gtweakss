@@ -1,4 +1,4 @@
-function Test-WinUtilInternetConnection {
+function Test-GTweaksInternetConnection {
     <#
     .SYNOPSIS
         Tests if the computer has internet connectivity
@@ -24,3 +24,5 @@ function Test-WinUtilInternetConnection {
         return $false
     }
 }
+
+

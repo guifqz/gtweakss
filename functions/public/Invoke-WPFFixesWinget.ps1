@@ -9,15 +9,17 @@ function Invoke-WPFFixesWinget {
     #>
     # Install Choco if not already present
     try {
-        Set-WinUtilTaskbaritem -state "Indeterminate" -overlay "logo"
-        Install-WinUtilChoco
+        Set-GTweaksTaskbaritem -state "Indeterminate" -overlay "logo"
+        Install-GTweaksChoco
         Start-Process -FilePath "choco" -ArgumentList "install winget -y --force" -NoNewWindow -Wait
     } catch {
         Write-Error "Failed to install winget: $_"
-        Set-WinUtilTaskbaritem -state "Error" -overlay "warning"
+        Set-GTweaksTaskbaritem -state "Error" -overlay "warning"
     } finally {
         Write-Host "==> Finished Winget Repair"
-        Set-WinUtilTaskbaritem -state "None" -overlay "checkmark"
+        Set-GTweaksTaskbaritem -state "None" -overlay "checkmark"
     }
 
 }
+
+
